@@ -115,8 +115,10 @@ fun AboutScreen(
                 icon = painterResource(R.drawable.website),
                 title = { Text("Website") },
                 description = { Text("zerotracelegit.netlify.app") },
-                onClick = { uriHandler.openUri("https://zerotracelegit.netlify.app") }
-            )
+                onClick = { uriHandler.openUri("https://zerotracelegit.netlify.app") },
+              ),
+            ),
+          ),
         )
       }
     }
