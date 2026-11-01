@@ -346,12 +346,12 @@ fun WrappedScreen(
             ) {
               Image(
                 painter = painterResource(R.drawable.ic_launcher_nobg),
-                contentDescription = "Echo Music Logo",
+                contentDescription = "LegitMusic Logo",
                 colorFilter = ColorFilter.tint(currentTheme.logoTint),
                 modifier = Modifier.size(24.dp)
               )
               Text(
-                "Echo Music",
+                "LegitMusic",
                 style = MaterialTheme.typography.titleMedium.copy(
                   fontWeight = FontWeight.Black,
                   letterSpacing = (-0.5).sp,
@@ -615,7 +615,7 @@ private fun IntroSlideSpotify(
 
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
       Text(
-        text = "Every beat, replay, and late-night obsession that soundtracked your life on Echo Music.",
+        text = "Every beat, replay, and late-night obsession that soundtracked your life on LegitMusic.",
         style = MaterialTheme.typography.bodyLarge.copy(
           fontSize = 16.sp,
           fontWeight = FontWeight.Medium,
@@ -2026,7 +2026,7 @@ private fun InsufficientDataView(
     ) {
       Image(
         painter = painterResource(R.drawable.ic_launcher_nobg),
-        contentDescription = "Echo Music",
+        contentDescription = "LegitMusic",
         colorFilter = ColorFilter.tint(Color(0xFF00F5D4)),
         modifier = Modifier.size(64.dp)
       )

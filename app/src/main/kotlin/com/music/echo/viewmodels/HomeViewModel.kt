@@ -72,6 +72,9 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withTimeoutOrNull
 
+private const val AI_RECOMMENDED_PLAYLIST_NAME = "From your taste by LegitMusic"
+private const val LEGACY_AI_RECOMMENDED_PLAYLIST_NAME = "From your taste by Echo Music"
+
 data class DailyDiscoverItem(
   val seed: Song,
   val recommendation: YTItem,
@@ -177,7 +180,9 @@ constructor(
   val aiRecommendedPlaylist =
     database
       .playlistsByNameAsc()
-      .map { playlists -> playlists.find { it.playlist.name == "From your taste by Echo Music" } }
+      .map { playlists ->
+        playlists.find { it.playlist.name == AI_RECOMMENDED_PLAYLIST_NAME }
+      }
       .flatMapLatest { playlist ->
         if (playlist != null && playlist.songCount > 0) {
           database.playlistSongs(playlist.playlist.id).map { playlistSongs ->
@@ -951,6 +956,13 @@ constructor(
   }
 
   init {
+    viewModelScope.launch(Dispatchers.IO) {
+      database
+        .searchPlaylists(LEGACY_AI_RECOMMENDED_PLAYLIST_NAME)
+        .first()
+        .filter { it.playlist.name == LEGACY_AI_RECOMMENDED_PLAYLIST_NAME }
+        .forEach { database.update(it.playlist.copy(name = AI_RECOMMENDED_PLAYLIST_NAME)) }
+    }
 
     viewModelScope.launch(Dispatchers.IO) {
       context.dataStore.data

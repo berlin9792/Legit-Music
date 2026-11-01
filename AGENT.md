@@ -1,4 +1,4 @@
-# AGENT.md - Echo Music
+# AGENT.md - LegitMusic
 
 Context file for AI agents (Antigravity, Claude Code, etc.) working in this repo.
 Keep this file up to date as the project evolves — it's the fastest way to give
@@ -104,7 +104,7 @@ If a new feature needs a UI pattern not covered in `DESIGN.md`, create a minimal
 
 ## What this app is
 
-Echo Music is a native **Android** music streaming client (Kotlin + Jetpack
+LegitMusic is a native **Android** music streaming client (Kotlin + Jetpack
 Compose) that streams from YouTube Music's catalog ad-free, and layers on
 offline downloads, real-time synced lyrics, music recognition ("Echo Find"),
 podcasts, local media playback, Spotify import, "Listen Together" (synced

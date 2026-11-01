@@ -34,7 +34,8 @@ object AiRecommendationHelper {
       .writeTimeout(30, TimeUnit.SECONDS)
       .build()
 
-  private const val PLAYLIST_NAME = "From your taste by Echo Music"
+  private const val PLAYLIST_NAME = "From your taste by LegitMusic"
+  private const val LEGACY_PLAYLIST_NAME = "From your taste by Echo Music"
 
   suspend fun generateRecommendations(context: Context, onLog: (suspend (String) -> Unit)? = null) =
     withContext(Dispatchers.IO) {
@@ -187,6 +188,11 @@ object AiRecommendationHelper {
           .firstOrNull()
           ?.find { it.playlist.name == PLAYLIST_NAME }
           ?.playlist
+          ?: database
+            .searchPlaylists(LEGACY_PLAYLIST_NAME)
+            .firstOrNull()
+            ?.find { it.playlist.name == LEGACY_PLAYLIST_NAME }
+            ?.playlist
       if (playlist == null) {
         playlist =
           PlaylistEntity(
@@ -197,6 +203,10 @@ object AiRecommendationHelper {
           )
         database.insert(playlist)
       } else {
+        if (playlist.name != PLAYLIST_NAME) {
+          playlist = playlist.copy(name = PLAYLIST_NAME)
+          database.update(playlist)
+        }
         // Clear existing songs in playlist
         database.clearPlaylist(playlist.id)
       }

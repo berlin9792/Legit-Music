@@ -5,7 +5,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
 import echo.music.iad1tya.db.entities.Song
-import echo.music.iad1tya.discord.DiscordOAuthRepository
+import echo.music.iad1tya.discord.DiscordTokenProvider
 import echo.music.iad1tya.utils.DiscordImageResolver
 import echo.music.iad1tya.utils.DiscordRPC
 import java.util.concurrent.atomic.AtomicBoolean
@@ -73,7 +73,7 @@ object DiscordPresenceManager {
     context: Context,
     token: String,
   ): DiscordRPC {
-    val activeToken = DiscordOAuthRepository.getValidAccessToken(context) ?: token
+    val activeToken = DiscordTokenProvider.getValidAccessToken(context) ?: token
     if (rpcInstance == null || rpcToken != activeToken) {
       runCatching { rpcInstance?.stopActivity() }
         .onFailure { Timber.tag(LOG_TAG).v(it, "failed to stop previous activity") }
@@ -119,7 +119,7 @@ object DiscordPresenceManager {
         }
 
         try {
-          val activeToken = DiscordOAuthRepository.getValidAccessToken(appContext) ?: token
+          val activeToken = DiscordTokenProvider.getValidAccessToken(appContext) ?: token
           if (activeToken.isBlank()) {
             Timber.tag(LOG_TAG).w("updatePresence skipped because token is missing")
             return@withLock false

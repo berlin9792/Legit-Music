@@ -394,7 +394,7 @@
     <string name="enable_scrobbling">Activer le scrobbling</string>
     <string name="lastfm_now_playing">Envoyer le titre en cours de lecture</string>
     <string name="last_fm_send_likes">Envoyer les J\'aime / Je n\'aime pas</string>
-    <string name="last_fm_send_likes_description">Aimer / Ne plus aimer des titres sur Last.fm lorsqu\'ils sont aimés / retirés dans echomusic</string>
+    <string name="last_fm_send_likes_description">Aimer / Ne plus aimer des titres sur Last.fm lorsqu\'ils sont aimés / retirés dans LegitMusic</string>
     <string name="logging_in">Connexion en cours…</string>
 
     <string name="scrobbling_configuration">Configuration du scrobbling</string>
@@ -481,19 +481,19 @@
     <string name="wrapped_total_artists_subtitle">artistes uniques</string>
     <string name="wrapped_total_songs_title">Vous avez écouté</string>
     <string name="wrapped_total_songs_subtitle">titres uniques</string>
-    <string name="wrapped_intro_title">echomusic</string>
+    <string name="wrapped_intro_title">LegitMusic</string>
     <string name="wrapped_intro_subtitle">il est temps de découvrir ce que vous avez écouté</string>
     <string name="wrapped_intro_button">c\'est parti !</string>
-    <string name="wrapped_end_thanks">Merci d\'avoir écouté avec echomusic !</string>
+    <string name="wrapped_end_thanks">Merci d\'avoir écouté avec LegitMusic !</string>
     <string name="wrapped_end_create_playlist">Créer votre playlist Rétrospective</string>
     <string name="wrapped_end_creating_playlist">Création en cours...</string>
     <string name="wrapped_end_playlist_saved">Playlist enregistrée</string>
-    <string name="wrapped_logo_content_description">Logo echomusic</string>
+    <string name="wrapped_logo_content_description">Logo LegitMusic</string>
     <string name="wrapped_year">2025</string>
     <string name="wrapped_ready_title">VOTRE RÉTROSPECTIVE EST PRÊTE !</string>
     <string name="wrapped_ready_subtitle">Il est temps de revoir ce que vous avez adoré cette année.</string>
     <string name="wrapped_thank_you">Merci pour votre écoute</string>
-    <string name="wrapped_special_thanks">Un remerciement spécial à echodh pour la création d\'echomusic</string>
+    <string name="wrapped_special_thanks">Un remerciement spécial à echodh pour la création d\'LegitMusic</string>
     <string name="wrapped_close">Fermer la rétrospective</string>
     <string name="wrapped_playlist_title">Votre rétrospective %s</string>
     <string name="wrapped_create_playlist">Créer la playlist</string>
@@ -568,9 +568,9 @@
     <string name="plays">écoutes</string>
     <string name="casting_to">Diffusion sur %s</string>
     <string name="progress_percent">Progression %s%%</string>
-    <string name="listening_to_echomusic">Écoute sur echomusic</string>
+    <string name="listening_to_echomusic">Écoute sur LegitMusic</string>
     <string name="listen_on_youtube_music">Écouter sur YouTube Music</string>
-    <string name="visit_echomusic">Visiter echomusic</string>
+    <string name="visit_echomusic">Visiter LegitMusic</string>
     <string name="open">Ouvrir</string>
     <string name="failed_to_create_image">Échec de la création de l\'image : %s</string>
     <string name="copied_title">Titre copié</string>
@@ -587,13 +587,13 @@
     <!-- Chaînes des Widgets -->
     <string name="album_art">Pochette d\'album</string>
     <string name="no_song_playing">Aucun titre en cours de lecture</string>
-    <string name="tap_to_open">Appuyez pour ouvrir echomusic</string>
+    <string name="tap_to_open">Appuyez pour ouvrir LegitMusic</string>
     <string name="previous">Précédent</string>
     <string name="play_pause">Lecture/Pause</string>
     <string name="next">Suivant</string>
     <string name="like">J\'aime</string>
     <string name="not_playing">Aucun titre en cours de lecture</string>
-    <string name="tap_to_play">Appuyez pour ouvrir echomusic</string>
+    <string name="tap_to_play">Appuyez pour ouvrir LegitMusic</string>
     <string name="widget_description">Widget de lecteur de musique avec commandes de lecture</string>
     <string name="queue_widget_description">Lecteur de musique avec aperçu de la file d\'attente</string>
     <string name="turntable_widget_description">Widget musical circulaire avec commandes de lecture et de j\'aime</string>
@@ -622,7 +622,7 @@
     <string name="playback_progress">Progression de la lecture</string>
     <string name="widget_playing_on">Lecture sur</string>
     <string name="widget_this_phone">Ce téléphone</string>
-    <string name="widget_echo_music">Echo Music</string>
+    <string name="widget_echo_music">LegitMusic</string>
     <string name="widget_queue">File d\'attente</string>
     <string name="widget_cast">Caster</string>
     <string name="widget_options">Plus d\'options</string>
@@ -736,7 +736,7 @@
     <string name="ai_lyrics_translation">Espace IA (AI Hub)</string>
     <string name="contribute_to_lossless">Contribuer à Lossless Music</string>
     <string name="lossless_music_hub">Hub Musique Lossless</string>
-    <string name="lossless_desc">Ajoutez de l\'audio haute fidélité sans perte (.flac) à l\'écosystème Echo Music. Taille max : 99 Mo.</string>
+    <string name="lossless_desc">Ajoutez de l\'audio haute fidélité sans perte (.flac) à l\'écosystème LegitMusic. Taille max : 99 Mo.</string>
     <string name="login_with_github">Se connecter avec GitHub</string>
     <string name="lossless_audio_file">Fichier audio Lossless</string>
     <string name="choose_file">Choisir un fichier .flac (Max 99 Mo)</string>
@@ -798,7 +798,7 @@
     <string name="crash_share_logs">Partager les journaux</string>
     <string name="copy_logs">Copier les journaux</string>
     <string name="crash_share_title">Partager le rapport de plantage</string>
-    <string name="crash_report_subject">Rapport de plantage echomusic</string>
+    <string name="crash_report_subject">Rapport de plantage LegitMusic</string>
     <string name="crash_close">Fermer</string>
     <string name="crash_no_log">Aucun journal de plantage disponible</string>
 
@@ -850,7 +850,7 @@
     <string name="delete_from_history">Supprimer de l\'historique</string>
     <string name="re_listen">Réécouter</string>
     <string name="hold_to_recognize">Maintenir l\'icône de recherche appuyée pour reconnaître de la musique</string>
-    <string name="play_on_app">Lire sur Echo Music</string>
+    <string name="play_on_app">Lire sur LegitMusic</string>
     <string name="recognized_track">Morceau reconnu</string>
 
     <!-- Importation CSV -->
@@ -889,9 +889,9 @@
     <string name="discord_rpc_preview">Aperçu Rich Presence</string>
     <string name="discord_presence">Présence</string>
     <string name="discord_connect_description">Connectez-vous avec Discord pour partager ce que vous écoutez</string>
-    <string name="discord_playing_echomusic">Joue à echomusic</string>
-    <string name="discord_watching_echomusic">Regarde echomusic</string>
-    <string name="discord_competing_echomusic">En compétition sur echomusic</string>
+    <string name="discord_playing_echomusic">Joue à LegitMusic</string>
+    <string name="discord_watching_echomusic">Regarde LegitMusic</string>
+    <string name="discord_competing_echomusic">En compétition sur LegitMusic</string>
     <string name="discord_activity_name">Nom de l\'activité</string>
     <string name="discord_activity_name_description">Nom personnalisé pour l\'activité (laisser vide par défaut)</string>
     <string name="discord_advanced_mode">Mode avancé</string>
@@ -950,7 +950,7 @@
 
     <string name="perm_required">Requis</string>
     <string name="perm_permissions">Autorisations</string>
-    <string name="perm_intro_text">Ces autorisations sont nécessaires pour que echomusic fonctionne correctement. Veuillez les accorder pour continuer.</string>
+    <string name="perm_intro_text">Ces autorisations sont nécessaires pour que LegitMusic fonctionne correctement. Veuillez les accorder pour continuer.</string>
 
     <string name="perm_notif_title">Notifications</string>
     <string name="perm_notif_desc">Sachez immédiatement quand votre musique est lue et contrôlez-la depuis la barre de notification.</string>
@@ -960,7 +960,7 @@
 
     <string name="feat_discover">Découvrir</string>
     <string name="feat_features">Fonctionnalités</string>
-    <string name="feat_intro">Explorez tout ce que echomusic a à offrir pour votre expérience musicale.</string>
+    <string name="feat_intro">Explorez tout ce que LegitMusic a à offrir pour votre expérience musicale.</string>
 
     <string name="feat_lyrics_title">Paroles intelligentes</string>
     <string name="feat_lyrics_desc">Profitez de paroles synchronisées mot à mot pour des millions de chansons.</string>
@@ -984,7 +984,7 @@
     <string name="welcome_update_status">À jour</string>
     <string name="welcome_update_intro">Assurez-vous de disposer des dernières fonctionnalités et améliorations de sécurité.</string>
     <string name="welcome_checking_updates">Vérification des mises à jour…</string>
-    <string name="welcome_up_to_date">echomusic est à jour !</string>
+    <string name="welcome_up_to_date">LegitMusic est à jour !</string>
     <string name="welcome_update_available">Une nouvelle version est disponible : %s</string>
     <string name="welcome_everything_ready">Tout est maintenant à jour</string>
     <string name="commits_title">Commits</string>
