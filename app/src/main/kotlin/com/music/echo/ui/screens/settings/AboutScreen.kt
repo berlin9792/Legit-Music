@@ -118,7 +118,6 @@ fun AboutScreen(
                 onClick = { uriHandler.openUri("https://zerotracelegit.netlify.app") },
               ),
             ),
-          ),
         )
       }
     }
