@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Bengali (বাংলা) Localization for Echo Music
+  Bengali (বাংলা) Localization for LegitMusic
   Complete 100% Coverage: 825 Strings & 14 Plurals
   Fully compliant with bangla-localization standards
 -->
@@ -369,7 +369,7 @@
     <string name="backup_create_failed">ব্যাকআপ তৈরি করা যায়নি</string>
     <string name="restore_failed">ব্যাকআপ পুনরুদ্ধার করা যায়নি</string>
     <string name="discord_integration">Discord ইন্টিগ্রেশন</string>
-    <string name="discord_information">echomusic আপনার Discord অ্যাকাউন্টের স্ট্যাটাস সেট করতে KizzyRPC লাইব্রেরি ব্যবহার করে। এতে Discord Gateway সংযোগ ব্যবহৃত হয়, যা Discord-এর পরিষেবার শর্তাবলীর লঙ্ঘন হিসেবে বিবেচিত হতে পারে। তবে এ কারণে কোনো ব্যবহারকারীর অ্যাকাউন্ট স্থগিত হওয়ার ঘটনা জানা যায়নি। নিজ দায়িত্বে ব্যবহার করুন।\nchomusic শুধু আপনার টোকেন সংগ্রহ করবে এবং অন্য সবকিছু স্থানীয়ভাবে সংরক্ষিত থাকবে।</string>
+    <string name="discord_information">LegitMusic আপনার Discord অ্যাকাউন্টের স্ট্যাটাস সেট করতে KizzyRPC লাইব্রেরি ব্যবহার করে। এতে Discord Gateway সংযোগ ব্যবহৃত হয়, যা Discord-এর পরিষেবার শর্তাবলীর লঙ্ঘন হিসেবে বিবেচিত হতে পারে। তবে এ কারণে কোনো ব্যবহারকারীর অ্যাকাউন্ট স্থগিত হওয়ার ঘটনা জানা যায়নি। নিজ দায়িত্বে ব্যবহার করুন।\nchomusic শুধু আপনার টোকেন সংগ্রহ করবে এবং অন্য সবকিছু স্থানীয়ভাবে সংরক্ষিত থাকবে।</string>
     <string name="dismiss">বন্ধ করুন</string>
     <string name="options">বিকল্প</string>
     <string name="preview">প্রিভিউ</string>
@@ -395,7 +395,7 @@
     <string name="listen_together_smart_resync">স্মার্ট নেটওয়ার্ক পুনঃসিঙ্ক</string>
     <string name="listen_together_smart_resync_desc">সংযোগ বিচ্ছিন্ন হওয়ার পর স্বয়ংক্রিয়ভাবে হোস্টের সঙ্গে সিঙ্ক করুন</string>
     <string name="spotify_import_title">Spotify থেকে আমদানি করুন</string>
-    <string name="spotify_import_desc">Spotify সংযুক্ত করুন, প্লেলিস্ট বেছে নিন এবং সেগুলো স্থানীয় Echo Music প্লেলিস্টে প্রতিলিপি করুন।</string>
+    <string name="spotify_import_desc">Spotify সংযুক্ত করুন, প্লেলিস্ট বেছে নিন এবং সেগুলো স্থানীয় LegitMusic প্লেলিস্টে প্রতিলিপি করুন।</string>
     <string name="spotify_connect">Spotify সংযুক্ত করুন</string>
     <string name="spotify_refresh">Spotify লাইব্রেরি রিফ্রেশ করুন</string>
     <string name="spotify_select_sources">Spotify প্লেলিস্ট বেছে নিন</string>
@@ -439,7 +439,7 @@
     <string name="recognition_notification_processing">শনাক্ত করা হচ্ছে…</string>
     <string name="recognition_notification_no_match">কোনো মিল পাওয়া যায়নি</string>
     <string name="recognition_notification_failed">শনাক্তকরণ ব্যর্থ হয়েছে</string>
-    <string name="listen_on_echo_music">Echo Music-এ শুনুন</string>
+    <string name="listen_on_echo_music">LegitMusic-এ শুনুন</string>
     <string name="qs_tile_music_recognizer">সঙ্গীত শনাক্ত করুন</string>
     <string name="listenbrainz_scrobbling">ListenBrainz স্ক্রবলিং</string>
     <string name="listenbrainz_scrobbling_description">আপনার শোনা ট্র্যাকগুলো স্বয়ংক্রিয়ভাবে ListenBrainz-এ জমা দিন</string>

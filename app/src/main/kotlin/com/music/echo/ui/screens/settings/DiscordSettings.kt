@@ -4,9 +4,6 @@ package echo.music.iad1tya.ui.screens.settings
 
 import android.content.Intent
 import android.net.Uri
-import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
@@ -16,7 +13,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,24 +28,17 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
-import coil3.imageLoader
-import coil3.request.ImageRequest
-import coil3.request.allowHardware
-import coil3.toBitmap
 import echo.music.iad1tya.LocalPlayerAwareWindowInsets
 import echo.music.iad1tya.LocalPlayerConnection
 import echo.music.iad1tya.R
 import echo.music.iad1tya.constants.*
 import echo.music.iad1tya.db.entities.Song
-import echo.music.iad1tya.discord.DiscordOAuthRepository
 import echo.music.iad1tya.ui.component.EditTextPreference
 import echo.music.iad1tya.ui.component.EnumListPreference
 import echo.music.iad1tya.ui.component.IconButton
 import echo.music.iad1tya.ui.component.ListPreference
 import echo.music.iad1tya.ui.component.PreferenceEntry
 import echo.music.iad1tya.ui.component.SwitchPreference
-import echo.music.iad1tya.ui.theme.PlayerColorExtractor
-import echo.music.iad1tya.ui.theme.extractThemeColor
 import echo.music.iad1tya.ui.utils.backToMain
 import echo.music.iad1tya.utils.makeTimeString
 import echo.music.iad1tya.utils.rememberEnumPreference
@@ -62,13 +51,6 @@ enum class ActivitySource {
   ALBUM,
   SONG,
   APP
-}
-
-private enum class DiscordAuthorizationUiMode {
-  Idle,
-  Waiting,
-  Success,
-  Failure
 }
 
 private val DiscordImageOptions = listOf("thumbnail", "artist", "appicon", "custom")
@@ -93,63 +75,6 @@ fun DiscordSettings(
   val snackbarHostState = remember { SnackbarHostState() }
 
   var discordToken by rememberPreference(DiscordTokenKey, "")
-  var discordUsername by rememberPreference(DiscordUsernameKey, "")
-  var discordName by rememberPreference(DiscordNameKey, "")
-  var discordAvatarUrl by rememberPreference(DiscordAvatarUrlKey, "")
-  var authorizedToken by rememberSaveable { mutableStateOf("") }
-  var authorizedUsername by rememberSaveable { mutableStateOf("") }
-  var authorizedName by rememberSaveable { mutableStateOf("") }
-  var authorizedAvatarUrl by rememberSaveable { mutableStateOf("") }
-  var showLogoutConfirm by rememberSaveable { mutableStateOf(false) }
-  var authorizationSession by remember {
-    mutableStateOf(DiscordOAuthRepository.createAuthorizationSession())
-  }
-  var authorizationUiModeName by rememberSaveable {
-    mutableStateOf(DiscordAuthorizationUiMode.Idle.name)
-  }
-  var authorizationMessage by rememberSaveable { mutableStateOf<String?>(null) }
-  var currentTimeMillis by remember { mutableLongStateOf(System.currentTimeMillis()) }
-
-  val authorizationUiMode =
-    remember(authorizationUiModeName) {
-      DiscordAuthorizationUiMode.valueOf(authorizationUiModeName)
-    }
-
-  val discordTokenExpiresAt by rememberPreference(DiscordTokenExpiresAtKey, 0L)
-
-  LaunchedEffect(discordTokenExpiresAt) {
-    currentTimeMillis = System.currentTimeMillis()
-    if (discordTokenExpiresAt > currentTimeMillis) {
-      delay((discordTokenExpiresAt - currentTimeMillis).coerceAtLeast(1_000L))
-      currentTimeMillis = System.currentTimeMillis()
-    }
-  }
-
-  LaunchedEffect(discordToken) {
-    val token = discordToken
-    if (token.isBlank()) {
-      authorizedToken = ""
-      authorizedUsername = ""
-      authorizedName = ""
-      authorizedAvatarUrl = ""
-      return@LaunchedEffect
-    }
-
-    if (token == authorizedToken) {
-      authorizedToken = ""
-    }
-
-    if (token.isNotBlank()) {
-      runCatching { DiscordOAuthRepository.fetchAccount(token) }
-        .onSuccess {
-          discordUsername = it.username
-          discordName = it.displayName
-          discordAvatarUrl = it.avatarUrl.orEmpty()
-        }
-        .onFailure { Timber.tag("DiscordSettings").w(it, "Discord account lookup failed") }
-    }
-  }
-
   val (discordRPC, onDiscordRPCChange) =
     rememberPreference(
       key = EnableDiscordRPCKey,
@@ -165,49 +90,6 @@ fun DiscordSettings(
         .d("Discord Rich Presence disabled or not authorized, stopping manager")
       DiscordPresenceManager.stop()
     }
-  }
-
-  val activeDiscordToken = authorizedToken.ifBlank { discordToken }
-  val activeDiscordUsername = authorizedUsername.ifBlank { discordUsername }
-  val activeDiscordName = authorizedName.ifBlank { discordName }
-  val activeDiscordAvatarUrl = authorizedAvatarUrl.ifBlank { discordAvatarUrl }
-  val isLoggedIn = remember(activeDiscordToken) { activeDiscordToken.isNotBlank() }
-  val isAccessTokenExpired =
-    remember(isLoggedIn, discordTokenExpiresAt, currentTimeMillis) {
-      isLoggedIn && discordTokenExpiresAt > 0L && currentTimeMillis >= discordTokenExpiresAt
-    }
-  val accountDisplayName =
-    remember(isLoggedIn, activeDiscordName, activeDiscordUsername, context) {
-      when {
-        activeDiscordName.isNotBlank() -> activeDiscordName
-        activeDiscordUsername.isNotBlank() -> activeDiscordUsername
-        isLoggedIn -> context.getString(R.string.account)
-        else -> context.getString(R.string.not_logged_in)
-      }
-    }
-
-  val launchAuthorization: () -> Unit = {
-    authorizationMessage = null
-    authorizationUiModeName = DiscordAuthorizationUiMode.Waiting.name
-  }
-
-  LaunchedEffect(authorizationUiMode) {
-    if (
-      authorizationUiMode == DiscordAuthorizationUiMode.Success ||
-        authorizationUiMode == DiscordAuthorizationUiMode.Failure
-    ) {
-      delay(2600)
-      if (authorizationUiModeName == authorizationUiMode.name) {
-        authorizationUiModeName = DiscordAuthorizationUiMode.Idle.name
-        authorizationMessage = null
-      }
-    }
-  }
-
-  BackHandler(enabled = authorizationUiMode == DiscordAuthorizationUiMode.Waiting) {
-    authorizationUiModeName = DiscordAuthorizationUiMode.Idle.name
-    authorizationMessage = null
-    authorizationSession = DiscordOAuthRepository.createAuthorizationSession()
   }
 
   val (largeImageType, onLargeImageTypeChange) =
@@ -273,7 +155,7 @@ fun DiscordSettings(
   val (button2Label) =
     rememberPreference(
       key = DiscordActivityButton2LabelKey,
-      defaultValue = "Go to Echo Music",
+      defaultValue = "Go to LegitMusic",
     )
   val (button2Enabled) =
     rememberPreference(
@@ -418,26 +300,17 @@ fun DiscordSettings(
       verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
       item {
-        DiscordAccountGroupCard(
-          displayName = accountDisplayName,
-          username = activeDiscordUsername,
-          avatarUrl = activeDiscordAvatarUrl.takeIf { it.isNotBlank() },
-          isLoggedIn = isLoggedIn,
-          authorizationUiMode = authorizationUiMode,
-          authorizationMessage = authorizationMessage,
-          isAccessTokenExpired = isAccessTokenExpired,
-          discordRpcEnabled = discordRPC,
-          onDiscordRpcEnabledChange = onDiscordRPCChange,
-          onReauthorize = launchAuthorization,
-          onPrimaryAction = {
-            if (isLoggedIn) {
-              showLogoutConfirm = true
-            } else {
-              launchAuthorization()
-            }
-          },
-          primaryActionEnabled = authorizationUiMode != DiscordAuthorizationUiMode.Waiting,
-        )
+        PreferenceGroup(title = stringResource(R.string.discord_integration)) {
+          item {
+            SwitchPreference(
+              title = { Text("Rich Presence") },
+              description = "Requires a saved Discord session to share playback status.",
+              icon = { Icon(painterResource(R.drawable.discord), null) },
+              checked = discordRPC,
+              onCheckedChange = onDiscordRPCChange,
+            )
+          }
+        }
       }
 
       item {
@@ -447,7 +320,7 @@ fun DiscordSettings(
               title = { Text(stringResource(R.string.refresh)) },
               description = stringResource(R.string.description_refresh),
               icon = { Icon(painterResource(R.drawable.update), null) },
-              isEnabled = discordRPC && isLoggedIn,
+              isEnabled = discordRPC && discordToken.isNotBlank(),
               trailingContent = {
                 if (isRefreshing) {
                   CircularWavyProgressIndicator(
@@ -455,7 +328,7 @@ fun DiscordSettings(
                   )
                 } else {
                   OutlinedButton(
-                    enabled = discordRPC && isLoggedIn,
+                    enabled = discordRPC && discordToken.isNotBlank(),
                     onClick = {
                       coroutineScope.launch {
                         isRefreshing = true
@@ -639,414 +512,6 @@ fun DiscordSettings(
       }
     }
 
-    if (showLogoutConfirm) {
-      AlertDialog(
-        onDismissRequest = { showLogoutConfirm = false },
-        title = { Text(stringResource(R.string.logout_confirm_title)) },
-        text = { Text(stringResource(R.string.logout_confirm_message)) },
-        confirmButton = {
-          TextButton(
-            onClick = {
-              coroutineScope.launch { DiscordOAuthRepository.clearSession(context) }
-              authorizedToken = ""
-              authorizedUsername = ""
-              authorizedName = ""
-              authorizedAvatarUrl = ""
-              discordToken = ""
-              DiscordPresenceManager.stop()
-              authorizationUiModeName = DiscordAuthorizationUiMode.Idle.name
-              authorizationMessage = null
-              authorizationSession = DiscordOAuthRepository.createAuthorizationSession()
-              showLogoutConfirm = false
-            },
-            shape = androidx.compose.foundation.shape.CircleShape,
-          ) {
-            Text(stringResource(R.string.logout_confirm_yes))
-          }
-        },
-        dismissButton = {
-          TextButton(
-            onClick = { showLogoutConfirm = false },
-            shape = androidx.compose.foundation.shape.CircleShape,
-          ) {
-            Text(stringResource(R.string.logout_confirm_no))
-          }
-        },
-      )
-    }
-
-    if (authorizationUiMode == DiscordAuthorizationUiMode.Waiting) {
-      androidx.compose.ui.window.Dialog(
-        onDismissRequest = {
-          authorizationUiModeName = DiscordAuthorizationUiMode.Idle.name
-          authorizationMessage = null
-        },
-        properties = androidx.compose.ui.window.DialogProperties(usePlatformDefaultWidth = false)
-      ) {
-        Surface(modifier = Modifier.fillMaxSize()) {
-          DiscordTokenWebView(
-            onTokenExtracted = { token ->
-              authorizedToken = token
-              discordToken = token
-              authorizationMessage = context.getString(R.string.discord_authorization_success)
-              authorizationUiModeName = DiscordAuthorizationUiMode.Success.name
-              // Account details are fetched in LaunchedEffect(discordToken) automatically
-            }
-          )
-        }
-      }
-    }
-  }
-}
-
-@Composable
-private fun DiscordAccountGroupCard(
-  displayName: String,
-  username: String,
-  avatarUrl: String?,
-  isLoggedIn: Boolean,
-  authorizationUiMode: DiscordAuthorizationUiMode,
-  authorizationMessage: String?,
-  isAccessTokenExpired: Boolean,
-  discordRpcEnabled: Boolean,
-  onDiscordRpcEnabledChange: (Boolean) -> Unit,
-  onReauthorize: () -> Unit,
-  onPrimaryAction: () -> Unit,
-  primaryActionEnabled: Boolean,
-) {
-  val context = LocalContext.current
-  var extractedGlowColor by remember(avatarUrl, isLoggedIn) { mutableStateOf(Color.Transparent) }
-  val avatarGlowColor by
-    animateColorAsState(
-      targetValue = extractedGlowColor,
-      animationSpec = tween(durationMillis = 420),
-      label = "discordAvatarGlow",
-    )
-  val avatarImageRequest =
-    remember(context, avatarUrl) {
-      avatarUrl
-        ?.takeIf { it.isNotBlank() }
-        ?.let { ImageRequest.Builder(context).data(it).size(256, 256).build() }
-    }
-
-  LaunchedEffect(avatarUrl, isLoggedIn) {
-    if (!isLoggedIn || avatarUrl.isNullOrBlank()) {
-      extractedGlowColor = Color.Transparent
-      return@LaunchedEffect
-    }
-
-    val bitmap =
-      runCatching {
-          context.imageLoader
-            .execute(
-              ImageRequest.Builder(context)
-                .data(avatarUrl)
-                .size(
-                  PlayerColorExtractor.Config.IMAGE_SIZE,
-                  PlayerColorExtractor.Config.IMAGE_SIZE
-                )
-                .allowHardware(false)
-                .build(),
-            )
-            .image
-            ?.toBitmap()
-        }
-        .getOrNull()
-
-    extractedGlowColor =
-      if (bitmap != null) {
-        withContext(Dispatchers.Default) { bitmap.extractThemeColor() }
-      } else {
-        Color.Transparent
-      }
-  }
-
-  val sessionSummary =
-    when (authorizationUiMode) {
-      DiscordAuthorizationUiMode.Waiting -> {
-        stringResource(R.string.discord_waiting_for_authorization)
-      }
-      DiscordAuthorizationUiMode.Success -> {
-        authorizationMessage ?: stringResource(R.string.discord_authorization_success)
-      }
-      DiscordAuthorizationUiMode.Failure -> {
-        authorizationMessage ?: stringResource(R.string.discord_authorization_failed)
-      }
-      DiscordAuthorizationUiMode.Idle -> {
-        if (isLoggedIn) {
-          stringResource(R.string.discord_account_ready)
-        } else {
-          stringResource(R.string.discord_login_description)
-        }
-      }
-    }
-
-  val sessionContainerColor =
-    when (authorizationUiMode) {
-      DiscordAuthorizationUiMode.Waiting -> MaterialTheme.colorScheme.secondaryContainer
-      DiscordAuthorizationUiMode.Success -> MaterialTheme.colorScheme.primaryContainer
-      DiscordAuthorizationUiMode.Failure -> MaterialTheme.colorScheme.errorContainer
-      DiscordAuthorizationUiMode.Idle -> MaterialTheme.colorScheme.surfaceContainerHighest
-    }
-
-  val sessionContentColor =
-    when (authorizationUiMode) {
-      DiscordAuthorizationUiMode.Waiting -> MaterialTheme.colorScheme.onSecondaryContainer
-      DiscordAuthorizationUiMode.Success -> MaterialTheme.colorScheme.onPrimaryContainer
-      DiscordAuthorizationUiMode.Failure -> MaterialTheme.colorScheme.onErrorContainer
-      DiscordAuthorizationUiMode.Idle -> MaterialTheme.colorScheme.onSurfaceVariant
-    }
-
-  Box(
-    modifier = Modifier.fillMaxWidth(),
-  ) {
-    Column(
-      modifier = Modifier.padding(horizontal = 16.dp),
-      verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-      Row(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(bottom = 8.dp)
-      ) {
-        Box(
-          modifier = Modifier.size(88.dp),
-        ) {
-          Surface(
-            modifier = Modifier.fillMaxSize(),
-            shape = CircleShape,
-            color = MaterialTheme.colorScheme.secondaryContainer,
-          ) {
-            Box(contentAlignment = Alignment.Center) {
-              Icon(
-                painter = painterResource(R.drawable.discord),
-                contentDescription = null,
-                modifier = Modifier.size(40.dp),
-                tint = MaterialTheme.colorScheme.onSecondaryContainer,
-              )
-
-              avatarImageRequest?.let {
-                AsyncImage(
-                  model = it,
-                  contentDescription = displayName,
-                  modifier = Modifier.fillMaxSize().clip(CircleShape),
-                )
-              }
-            }
-          }
-        }
-
-        Column(
-          modifier = Modifier.weight(1f),
-          verticalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-          Text(
-            text = displayName,
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface,
-          )
-
-          if (username.isNotBlank()) {
-            Text(
-              text = "@$username",
-              style = MaterialTheme.typography.titleMedium,
-              color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-          }
-        }
-      }
-
-      AnimatedVisibility(
-        visible = authorizationUiMode != DiscordAuthorizationUiMode.Idle,
-      ) {
-        Surface(
-          modifier = Modifier.fillMaxWidth(),
-          shape = MaterialTheme.shapes.large,
-          color = sessionContainerColor,
-        ) {
-          Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-          ) {
-            if (authorizationUiMode == DiscordAuthorizationUiMode.Waiting) {
-              CircularWavyProgressIndicator(
-                modifier = Modifier.size(24.dp),
-                color = sessionContentColor,
-              )
-            } else {
-              Icon(
-                painter =
-                  painterResource(
-                    when (authorizationUiMode) {
-                      DiscordAuthorizationUiMode.Success -> R.drawable.check
-                      DiscordAuthorizationUiMode.Failure -> R.drawable.close
-                      DiscordAuthorizationUiMode.Idle -> R.drawable.discord
-                      DiscordAuthorizationUiMode.Waiting -> R.drawable.discord
-                    },
-                  ),
-                contentDescription = null,
-                tint = sessionContentColor,
-              )
-            }
-
-            Text(
-              text = sessionSummary,
-              style = MaterialTheme.typography.bodyMedium,
-              color = sessionContentColor,
-            )
-          }
-        }
-      }
-
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically
-      ) {
-        Surface(
-          modifier = Modifier.weight(1f),
-          shape = androidx.compose.foundation.shape.CircleShape,
-          color = MaterialTheme.colorScheme.surfaceContainerHigh,
-        ) {
-          Row(
-            modifier =
-              Modifier.fillMaxWidth()
-                .heightIn(min = 56.dp)
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-          ) {
-            Row(
-              verticalAlignment = Alignment.CenterVertically,
-              horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-              Surface(
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.surface,
-                modifier = Modifier.size(36.dp)
-              ) {
-                Box(contentAlignment = Alignment.Center) {
-                  Icon(
-                    painter = painterResource(R.drawable.info),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(18.dp)
-                  )
-                }
-              }
-
-              Text(
-                text = "RPC",
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.SemiBold,
-              )
-            }
-
-            Switch(
-              checked = discordRpcEnabled,
-              onCheckedChange = { isChecked ->
-                onDiscordRpcEnabledChange(isChecked)
-                if (isChecked && !isLoggedIn) {
-                  onPrimaryAction()
-                }
-              },
-              modifier = Modifier.scale(0.8f),
-              enabled = true,
-              colors =
-                SwitchDefaults.colors(
-                  checkedThumbColor = MaterialTheme.colorScheme.surface,
-                  checkedTrackColor = MaterialTheme.colorScheme.onSurface,
-                  uncheckedThumbColor = MaterialTheme.colorScheme.outline,
-                  uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainerHighest
-                )
-            )
-          }
-        }
-
-        if (isLoggedIn) {
-          OutlinedButton(
-            onClick = onPrimaryAction,
-            enabled = primaryActionEnabled,
-            modifier = Modifier.weight(1f).heightIn(min = 56.dp),
-            shape = androidx.compose.foundation.shape.CircleShape,
-          ) {
-            Text(stringResource(R.string.action_logout))
-          }
-        } else {
-          Button(
-            onClick = onPrimaryAction,
-            enabled = primaryActionEnabled,
-            modifier = Modifier.weight(1f).heightIn(min = 56.dp),
-            shape = androidx.compose.foundation.shape.CircleShape,
-          ) {
-            Text(stringResource(R.string.discord_open_authorization))
-          }
-        }
-      }
-
-      AnimatedVisibility(
-        visible = isAccessTokenExpired && authorizationUiMode == DiscordAuthorizationUiMode.Idle,
-      ) {
-        DiscordReauthorizeWarningRow(
-          onReauthorize = onReauthorize,
-          enabled = primaryActionEnabled,
-        )
-      }
-    }
-  }
-}
-
-@Composable
-private fun DiscordReauthorizeWarningRow(
-  onReauthorize: () -> Unit,
-  enabled: Boolean,
-  modifier: Modifier = Modifier,
-) {
-  Surface(
-    modifier = modifier.fillMaxWidth(),
-    shape = MaterialTheme.shapes.large,
-    color = MaterialTheme.colorScheme.errorContainer,
-  ) {
-    ListItem(
-      headlineContent = {
-        Text(
-          text = stringResource(R.string.discord_reauthorize_required_title),
-          fontWeight = FontWeight.SemiBold,
-        )
-      },
-      supportingContent = {
-        Text(stringResource(R.string.discord_reauthorize_required_description))
-      },
-      leadingContent = {
-        Icon(
-          painter = painterResource(R.drawable.error),
-          contentDescription = null,
-        )
-      },
-      trailingContent = {
-        TextButton(
-          onClick = onReauthorize,
-          enabled = enabled,
-          colors =
-            ButtonDefaults.textButtonColors(
-              contentColor = MaterialTheme.colorScheme.onErrorContainer,
-            ),
-          shape = androidx.compose.foundation.shape.CircleShape,
-        ) {
-          Text(stringResource(R.string.discord_reauthorize_action))
-        }
-      },
-      colors =
-        ListItemDefaults.colors(
-          containerColor = Color.Transparent,
-          headlineColor = MaterialTheme.colorScheme.onErrorContainer,
-          supportingColor = MaterialTheme.colorScheme.onErrorContainer,
-          leadingIconColor = MaterialTheme.colorScheme.onErrorContainer,
-          trailingIconColor = MaterialTheme.colorScheme.onErrorContainer,
-        ),
-    )
   }
 }
 
@@ -1173,7 +638,7 @@ fun RichPresence(
   button1Enabled: Boolean = true,
   button1UrlSource: String = "songurl",
   button1CustomUrl: String = "",
-  button2Label: String = "Go to Echo Music",
+  button2Label: String = "Go to LegitMusic",
   button2Enabled: Boolean = true,
   button2UrlSource: String = "custom",
   button2CustomUrl: String = "https://github.com/EchoMusicApp/Echo-Music",

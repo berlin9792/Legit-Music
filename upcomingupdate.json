@@ -1,5 +1,9 @@
 {
   "features": [
+    "Simplify About screen: show Ayush attribution and the LegitMusic website, removing contributors, social, support, and Discord community links",
+    "Remove Discord account sign-in and token-capture UI while preserving Rich Presence for existing saved sessions",
+    "Rename the user-facing app branding to LegitMusic across the launcher, UI, and localized strings",
+    "Remove the automatic Welcome dialog shown on first launch and after app updates",
     "Local Taste Engine: Offline, account-free algorithmic recommendation engine with skip tracking and taste mix generation",
     "Local Taste Engine (Slice 2): Multi-source Last.fm recommendation pipeline (similar tracks, similar artists, top genres) with 1-hour taste snapshot caching and additive scoring bonuses",
     "Local Taste Engine (Slice 3): Genre awareness with additive scoring bonus (+1.0), YouTube taste signals extraction, cross-screen generation status synchronization, and 'From Taste' quick action",
