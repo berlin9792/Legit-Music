@@ -22,7 +22,6 @@ import echo.music.iad1tya.constants.DarkModeKey
 import echo.music.iad1tya.constants.PureBlackKey
 import echo.music.iad1tya.echomusic.changelog.ChangelogScreen
 import echo.music.iad1tya.echomusic.commitscreen.CommitScreen
-import echo.music.iad1tya.echomusic.updater.UpdateScreen
 import echo.music.iad1tya.ui.screens.ambient.AmbientModeScreen
 import echo.music.iad1tya.ui.screens.artist.ArtistAlbumsScreen
 import echo.music.iad1tya.ui.screens.artist.ArtistItemsScreen
@@ -61,7 +60,6 @@ import echo.music.iad1tya.ui.screens.settings.PrivacySettings
 import echo.music.iad1tya.ui.screens.settings.SettingsScreen
 import echo.music.iad1tya.ui.screens.settings.StorageSettings
 import echo.music.iad1tya.ui.screens.settings.ThemeScreen
-import echo.music.iad1tya.ui.screens.settings.UpdateSettings
 import echo.music.iad1tya.ui.screens.settings.UptimeScreen
 import echo.music.iad1tya.ui.screens.settings.integrations.ListenTogetherSettings
 import echo.music.iad1tya.utils.rememberEnumPreference
@@ -320,23 +318,6 @@ fun NavGraphBuilder.navigationBuilder(
   composable("blocked_artists") { BlockedArtistsScreen(navController) }
 
   composable(
-    route = "settings/update?highlightKey={highlightKey}",
-    arguments =
-      listOf(
-        navArgument("highlightKey") {
-          type = NavType.StringType
-          nullable = true
-        }
-      )
-  ) { backStackEntry ->
-    UpdateSettings(
-      navController,
-      scrollBehavior,
-      highlightKey = backStackEntry.arguments?.getString("highlightKey")
-    )
-  }
-
-  composable(
     route = "settings/account?highlightKey={highlightKey}",
     arguments =
       listOf(
@@ -570,8 +551,6 @@ fun NavGraphBuilder.navigationBuilder(
       highlightKey = backStackEntry.arguments?.getString("highlightKey")
     )
   }
-
-  composable("update") { UpdateScreen(navController) }
 
   composable("login") { LoginScreen(navController) }
 

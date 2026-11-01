@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import echo.music.iad1tya.LocalPlayerAwareWindowInsets
 import echo.music.iad1tya.R
-import echo.music.iad1tya.echomusic.updater.getUpdateAvailableState
 import echo.music.iad1tya.ui.component.IconButton
 import echo.music.iad1tya.ui.component.Material3SettingsGroup
 import echo.music.iad1tya.ui.component.Material3SettingsItem
@@ -54,10 +53,6 @@ fun SettingsScreen(
   val uriHandler = LocalUriHandler.current
   val context = LocalContext.current
   val isAndroid12OrLater = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-  val isUpdateAvailable =
-    getUpdateAvailableState(context) &&
-      echo.music.iad1tya.echomusic.updater.getAutoUpdateCheckSetting(context)
-
   var searchQuery by rememberSaveable { mutableStateOf("") }
   val searchLower = searchQuery.lowercase()
 
@@ -70,7 +65,6 @@ fun SettingsScreen(
   val privacyText = stringResource(R.string.privacy)
   val storageText = stringResource(R.string.storage)
   val backupText = stringResource(R.string.backup_restore)
-  val systemUpdateText = stringResource(R.string.system_update)
   val aboutText = stringResource(R.string.about)
 
   val accountDesc = stringResource(R.string.setting_desc_account)
@@ -82,7 +76,6 @@ fun SettingsScreen(
   val privacyDesc = stringResource(R.string.setting_desc_privacy)
   val storageDesc = stringResource(R.string.setting_desc_storage)
   val backupDesc = stringResource(R.string.setting_desc_backup)
-  val systemUpdateDesc = stringResource(R.string.setting_desc_update)
   val aboutDesc = stringResource(R.string.setting_desc_about)
 
   val scrollState = rememberScrollState()
@@ -308,33 +301,6 @@ fun SettingsScreen(
             title = { Text(backupText) },
             description = { Text(backupDesc) },
             onClick = { navController.navigate("settings/backup_restore") }
-          )
-        )
-      }
-      if (
-        systemUpdateText.lowercase().contains(searchLower) ||
-          systemUpdateDesc.lowercase().contains(searchLower)
-      ) {
-        add(
-          Material3SettingsItem(
-            isHighlighted = (highlightKey == systemUpdateText),
-            icon =
-              painterResource(
-                if (isUpdateAvailable) R.drawable.ic_launcher_nobg else R.drawable.update
-              ),
-            title = { Text(systemUpdateText) },
-            description =
-              if (isUpdateAvailable) {
-                {
-                  Text(
-                    text = stringResource(R.string.update_available),
-                    color = MaterialTheme.colorScheme.error
-                  )
-                }
-              } else {
-                { Text(systemUpdateDesc) }
-              },
-            onClick = { navController.navigate("settings/update") }
           )
         )
       }

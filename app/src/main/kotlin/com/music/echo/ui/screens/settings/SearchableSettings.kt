@@ -226,18 +226,6 @@ fun getAllSearchableSettings(): List<SearchableSetting> {
       "settings/content"
     ),
     SearchableSetting(
-      stringResource(R.string.app_update_uptodate),
-      stringResource(R.string.app_update_uptodate_desc),
-      "System Update",
-      "settings/update"
-    ),
-    SearchableSetting(
-      stringResource(R.string.app_updates_title),
-      stringResource(R.string.app_updates_title_desc),
-      "System Update",
-      "settings/update"
-    ),
-    SearchableSetting(
       stringResource(R.string.appearance),
       stringResource(R.string.appearance_desc),
       "Appearance",
@@ -334,12 +322,6 @@ fun getAllSearchableSettings(): List<SearchableSetting> {
       "settings/player"
     ),
     SearchableSetting(
-      stringResource(R.string.auto_update_check),
-      stringResource(R.string.auto_update_check_subtitle),
-      "System Update",
-      "settings/update"
-    ),
-    SearchableSetting(
       stringResource(R.string.backup_restore),
       stringResource(R.string.backup_restore_desc),
       "Backup & Restore",
@@ -392,12 +374,6 @@ fun getAllSearchableSettings(): List<SearchableSetting> {
       stringResource(R.string.clear_all_downloads_desc),
       "Storage",
       "settings/storage"
-    ),
-    SearchableSetting(
-      stringResource(R.string.clear_downloaded_updates),
-      stringResource(R.string.clear_downloaded_updates_desc),
-      "System Update",
-      "settings/update"
     ),
     SearchableSetting(
       stringResource(R.string.clear_downloads_dialog),
@@ -468,8 +444,8 @@ fun getAllSearchableSettings(): List<SearchableSetting> {
     SearchableSetting(
       stringResource(R.string.commits),
       stringResource(R.string.commits_desc),
-      "System Update",
-      "settings/update"
+      "About",
+      "settings/commits"
     ),
     SearchableSetting(
       stringResource(R.string.config_proxy),
@@ -1649,12 +1625,6 @@ fun getAllSearchableSettings(): List<SearchableSetting> {
       "settings/content"
     ),
     SearchableSetting(
-      stringResource(R.string.system_update),
-      stringResource(R.string.system_update_desc),
-      "System Update",
-      "settings/update"
-    ),
-    SearchableSetting(
       stringResource(R.string.tertiary_color_style),
       stringResource(R.string.tertiary_color_style_desc),
       "Appearance",
@@ -1709,34 +1679,10 @@ fun getAllSearchableSettings(): List<SearchableSetting> {
       "settings/storage"
     ),
     SearchableSetting(
-      stringResource(R.string.update_available),
-      stringResource(R.string.update_available_desc),
-      "System Update",
-      "settings/update"
-    ),
-    SearchableSetting(
-      stringResource(R.string.update_notifications),
-      stringResource(R.string.update_notifications_subtitle),
-      "System Update",
-      "settings/update"
-    ),
-    SearchableSetting(
-      stringResource(R.string.update_settings_title),
-      stringResource(R.string.update_settings_title_desc),
-      "System Update",
-      "settings/update"
-    ),
-    SearchableSetting(
-      stringResource(R.string.version),
-      stringResource(R.string.version_desc),
-      "System Update",
-      "settings/update"
-    ),
-    SearchableSetting(
       stringResource(R.string.view_commit_history),
       stringResource(R.string.view_commit_history_desc),
-      "System Update",
-      "settings/update"
+      "About",
+      "settings/commits"
     ),
     SearchableSetting(
       stringResource(R.string.wavy),
@@ -1780,8 +1726,8 @@ fun getAllSearchableSettings(): List<SearchableSetting> {
     SearchableSetting(
       stringResource(R.string.version, BuildConfig.VERSION_NAME),
       stringResource(R.string.version_desc),
-      "System Update",
-      "settings/update"
+      "About",
+      "settings/about"
     ),
     SearchableSetting(
       stringResource(R.string.discord_integration),

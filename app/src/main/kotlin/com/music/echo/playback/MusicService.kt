@@ -133,7 +133,6 @@ import echo.music.iad1tya.db.entities.RelatedSongMap
 import echo.music.iad1tya.db.entities.Song
 import echo.music.iad1tya.di.DownloadCache
 import echo.music.iad1tya.di.PlayerCache
-import echo.music.iad1tya.echomusic.updater.downloadmanager.EchoNotificationProvider
 import echo.music.dsp.audio.AutomixDuckAudioProcessor
 import echo.music.dsp.audio.CustomEqualizerAudioProcessor
 import echo.music.dsp.audio.StereoWidenerAudioProcessor
