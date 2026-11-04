@@ -573,23 +573,11 @@ class MainActivity : ComponentActivity() {
               notificationManager.createNotificationChannel(channel)
             }
 
-            val bitmap =
-              android.graphics.BitmapFactory.decodeResource(
-                context.resources,
-                R.drawable.birthday_image
-              )
-
             val notification =
               androidx.core.app.NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.drawable.echomusicnotification) // Use correct transparent echo icon
                 .setContentTitle("Happy Birthday Aditya!")
                 .setContentText("Today is the developer's birthday!")
-                .setLargeIcon(bitmap)
-                .setStyle(
-                  androidx.core.app.NotificationCompat.BigPictureStyle()
-                    .bigPicture(bitmap)
-                    .bigLargeIcon(null as android.graphics.Bitmap?)
-                )
                 .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .build()
