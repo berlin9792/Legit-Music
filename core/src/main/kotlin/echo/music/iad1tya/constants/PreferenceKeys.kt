@@ -10,6 +10,7 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 val IsFirstRunKey = booleanPreferencesKey("isFirstRun")
+val HasSeenWelcomeDialogKey = booleanPreferencesKey("has_seen_welcome_dialog")
 val DataSaverEnabledKey = booleanPreferencesKey("dataSaverEnabled")
 val SpotifySpDcKey = stringPreferencesKey("spotify_sp_dc")
 val SpotifySpKeyKey = stringPreferencesKey("spotify_sp_key")

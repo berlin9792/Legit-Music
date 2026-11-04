@@ -103,3 +103,11 @@ Vertical swipe discovery, laid out like a Resso-style "For You" page (interactio
 ## Ambient Mode Canvas
 
 Ambient Mode may layer muted Canvas video artwork inside the existing album-art square. Keep the original square size, rounded clipping, and interaction surface unchanged; Canvas is a non-interactive visual layer above the normal album art and follows playback state. The existing glow background remains separate underneath the screen.
+
+## First-launch Welcome Dialog
+
+Show this compact dialog only once per app installation. Use a centered circular
+developer portrait, a clear "~Ayush" attribution, and a clickable website link
+inside a flat surface with restrained rounded corners. Keep the primary action
+simple and ensure dismissing via the system back/outside tap is remembered just
+like the primary button.

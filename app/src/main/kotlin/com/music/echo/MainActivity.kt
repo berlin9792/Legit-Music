@@ -134,6 +134,7 @@ import coil3.request.crossfade
 import coil3.toBitmap
 import com.music.echo.utils.HapticType
 import com.music.echo.utils.rememberHapticHelper
+import echo.music.iad1tya.ui.component.FirstLaunchWelcomeDialog
 import com.music.innertube.YouTube
 import com.music.innertube.models.SongItem
 import com.music.innertube.models.WatchEndpoint
@@ -520,6 +521,11 @@ class MainActivity : ComponentActivity() {
     val enableDynamicTheme by rememberPreference(DynamicThemeKey, defaultValue = true)
     val enableHighRefreshRate by rememberPreference(EnableHighRefreshRateKey, defaultValue = true)
     val context = LocalContext.current
+    var showWelcomeDialog by rememberSaveable { mutableStateOf<Boolean?>(null) }
+
+    LaunchedEffect(context) {
+      showWelcomeDialog = context.dataStore.data.first()[HasSeenWelcomeDialogKey] != true
+    }
 
     LaunchedEffect(Unit) {
       val currentVersion = BuildConfig.VERSION_NAME
@@ -712,6 +718,19 @@ class MainActivity : ComponentActivity() {
               }
             }
       ) {
+        if (showWelcomeDialog == true) {
+          FirstLaunchWelcomeDialog(
+            onDismiss = {
+              showWelcomeDialog = false
+              lifecycleScope.launch {
+                context.dataStore.edit { preferences ->
+                  preferences[HasSeenWelcomeDialogKey] = true
+                }
+              }
+            }
+          )
+        }
+
         val focusManager = LocalFocusManager.current
         val density = LocalDensity.current
         val configuration = LocalWindowInfo.current

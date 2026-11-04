@@ -54,6 +54,12 @@
 
 
     <string name="echo_music_title">LegitMusic</string>
+    <string name="welcome_dialog_title">Welcome to LegitMusic</string>
+    <string name="welcome_dialog_credit">Made by</string>
+    <string name="welcome_developer_name">~Ayush</string>
+    <string name="welcome_website">zerotracelegit.netlify.app</string>
+    <string name="welcome_get_started">Get started</string>
+    <string name="welcome_developer_avatar_desc">Developer Ayush</string>
     <string name="developer_section">DEVELOPER</string>
     <string name="collaborator_section">COLLABORATOR</string>
     <string name="app_info_section">APP INFO</string>

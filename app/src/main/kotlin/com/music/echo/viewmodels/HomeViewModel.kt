@@ -768,42 +768,44 @@ constructor(
   private val _isLoadingMore = MutableStateFlow(false)
 
   fun loadMoreYouTubeItems(continuation: String?) {
-    if (continuation == null || _isLoadingMore.value) return
-    val hideExplicit = context.dataStore.get(HideExplicitKey, false)
-    val hideVideoSongs = context.dataStore.get(HideVideoSongsKey, false)
-    val hideYoutubeShorts = context.dataStore.get(HideYoutubeShortsKey, false)
+    if (continuation == null || !_isLoadingMore.compareAndSet(false, true)) return
 
     viewModelScope.launch(Dispatchers.IO) {
-      _isLoadingMore.value = true
-      var currentContinuation = continuation
-      var hasNewItems = false
+      try {
+        val hideExplicit = context.dataStore.get(HideExplicitKey, false)
+        val hideVideoSongs = context.dataStore.get(HideVideoSongsKey, false)
+        val hideYoutubeShorts = context.dataStore.get(HideYoutubeShortsKey, false)
+        var currentContinuation = continuation
+        var hasNewItems = false
 
-      while (currentContinuation != null && !hasNewItems) {
-        val nextSections = YouTube.home(currentContinuation).getOrNull() ?: break
-        currentContinuation = nextSections.continuation
+        while (currentContinuation != null && !hasNewItems) {
+          val nextSections = YouTube.home(currentContinuation).getOrNull() ?: break
+          currentContinuation = nextSections.continuation
 
-        val newSections =
-          nextSections.sections.mapNotNull { section ->
-            val filteredItems =
-              section.items
-                .filterExplicit(hideExplicit)
-                .filterVideoSongs(hideVideoSongs)
-                .filterYoutubeShorts(hideYoutubeShorts)
-            if (filteredItems.isEmpty()) null else section.copy(items = filteredItems)
+          val newSections =
+            nextSections.sections.mapNotNull { section ->
+              val filteredItems =
+                section.items
+                  .filterExplicit(hideExplicit)
+                  .filterVideoSongs(hideVideoSongs)
+                  .filterYoutubeShorts(hideYoutubeShorts)
+              if (filteredItems.isEmpty()) null else section.copy(items = filteredItems)
+            }
+
+          if (newSections.isNotEmpty()) {
+            hasNewItems = true
           }
 
-        if (newSections.isNotEmpty()) {
-          hasNewItems = true
+          homePage.value =
+            nextSections.copy(
+              chips = homePage.value?.chips,
+              continuation = currentContinuation,
+              sections = homePage.value?.sections.orEmpty() + newSections
+            )
         }
-
-        homePage.value =
-          nextSections.copy(
-            chips = homePage.value?.chips,
-            continuation = currentContinuation,
-            sections = homePage.value?.sections.orEmpty() + newSections
-          )
+      } finally {
+        _isLoadingMore.value = false
       }
-      _isLoadingMore.value = false
     }
   }
 

@@ -3,7 +3,7 @@
     "Simplify About screen: show Ayush attribution and the LegitMusic website, removing contributors, social, support, and Discord community links",
     "Remove Discord account sign-in and token-capture UI while preserving Rich Presence for existing saved sessions",
     "Rename the user-facing app branding to LegitMusic across the launcher, UI, and localized strings",
-    "Remove the automatic Welcome dialog shown on first launch and after app updates",
+    "Show a one-time first-launch Welcome dialog with Ayush's portrait, attribution, and website link",
     "Local Taste Engine: Offline, account-free algorithmic recommendation engine with skip tracking and taste mix generation",
     "Local Taste Engine (Slice 2): Multi-source Last.fm recommendation pipeline (similar tracks, similar artists, top genres) with 1-hour taste snapshot caching and additive scoring bonuses",
     "Local Taste Engine (Slice 3): Genre awareness with additive scoring bonus (+1.0), YouTube taste signals extraction, cross-screen generation status synchronization, and 'From Taste' quick action",
@@ -11,6 +11,7 @@
     "Android Auto: optional autoplay of the restored queue on automotive connect (Settings → Player, default off) and Home browse node with YouTube Home sections, suggested and recent content alongside local library"
   ],
   "bug_fixes": [
+    "Prevent Home feed scroll jank near pagination by moving filter preference reads off the UI thread and preventing duplicate load requests",
     "Stats: fix NullPointerException crash when opening Stats by making SongWithStats thumbnailUrl and play counts safely nullable, removing unsafe forced unwraps, and guarding date sequence boundaries (#646)",
     "Playback: fix custom addon (BitChord) queue repeating the first track audio when advancing, caused by stale trackedMediaItem metadata and loose title-only matching; resolve per-mediaId metadata with strict title+artist+duration match and addon-aware preload",
     "Android Auto: fix Home shelves rendering without artwork and shuffle-led shelves ('Casuale') browsing empty, by falling back to the first item thumbnail and mapping musicShuffleRenderer",
