@@ -1,5 +1,6 @@
 package echo.music.iad1tya.ui.component
 
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,11 +17,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,7 +34,14 @@ private const val DEVELOPER_WEBSITE = "https://zerotracelegit.netlify.app"
 
 @Composable
 fun FirstLaunchWelcomeDialog(onDismiss: () -> Unit) {
+  val context = LocalContext.current
   val uriHandler = LocalUriHandler.current
+  val developerAvatar =
+    remember(context) {
+      checkNotNull(BitmapFactory.decodeResource(context.resources, R.drawable.dev)) {
+        "Failed to decode developer avatar resource"
+      }.asImageBitmap()
+    }
 
   Dialog(onDismissRequest = onDismiss) {
     Surface(
@@ -46,7 +56,7 @@ fun FirstLaunchWelcomeDialog(onDismiss: () -> Unit) {
         verticalArrangement = Arrangement.Center,
       ) {
         Image(
-          painter = painterResource(R.drawable.dev),
+          bitmap = developerAvatar,
           contentDescription = stringResource(R.string.welcome_developer_avatar_desc),
           modifier = Modifier.size(96.dp).clip(CircleShape),
         )
