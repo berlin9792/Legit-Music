@@ -56,7 +56,7 @@ jobs:
         chmod +x gradlew
         ./gradlew assembleUniversalGmsRelease
 
-    - name: Build Debug APK (fork PR fallback without signing)
+    - name: Build Universal GMS Debug APK (when release signing is unavailable)
       if: ${{ env.KEYSTORE_BASE64 == '' }}
       env:
         KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
@@ -71,7 +71,7 @@ jobs:
           -keyalg RSA \
           -validity 10000
         chmod +x gradlew
-        ./gradlew assembleUniversalFossDebug
+        ./gradlew assembleUniversalGmsDebug
 
     - name: Upload Universal APK
       uses: actions/upload-artifact@v7

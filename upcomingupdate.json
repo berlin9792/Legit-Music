@@ -12,6 +12,7 @@
     "Android Auto: optional autoplay of the restored queue on automotive connect (Settings → Player, default off) and Home browse node with YouTube Home sections, suggested and recent content alongside local library"
   ],
   "bug_fixes": [
+    "Build the unsigned CI fallback as Universal GMS Debug so Firebase maintenance controls are present in downloaded test APKs",
     "Show Firebase notifications while the app is foregrounded and log FCM topic subscription and Remote Config fetch failures",
     "Improve Home scrolling by removing unused feed-state subscriptions that triggered unnecessary full-screen recompositions",
     "Show the developer's profile photo in the first-launch welcome dialog with an account-icon fallback when image loading fails",

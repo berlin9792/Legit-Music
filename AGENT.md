@@ -230,6 +230,8 @@ widget/         Home-screen widget
   immediate refresh. Foreground FCM notification payloads are displayed by the
   app service, which also logs topic subscription and fetch failures. FOSS
   builds provide a no-op controller.
+- CI's unsigned fallback APK should use `UniversalGmsDebug` when Firebase
+  behavior needs to be tested; the FOSS variant excludes Firebase SDKs.
 - Keep Home feed pagination triggers non-blocking: load its DataStore filters
   inside the IO coroutine and claim the in-flight guard before launching it.
 - Avoid collecting HomeViewModel flows in HomeScreen unless the UI consumes
