@@ -583,13 +583,10 @@ fun HomeScreen(
   val dailyDiscover by viewModel.dailyDiscover.collectAsState()
   val communityPlaylists by viewModel.communityPlaylists.collectAsState()
 
-  val allLocalItems by viewModel.allLocalItems.collectAsState()
-  val allYtItems by viewModel.allYtItems.collectAsState()
   val speedDialItems by viewModel.speedDialItems.collectAsState()
   val selectedChip by viewModel.selectedChip.collectAsState()
 
   val isLoading: Boolean by viewModel.isLoading.collectAsState()
-  val isMoodAndGenresLoading = isLoading && explorePage?.moodAndGenres == null
   val isRefreshing by viewModel.isRefreshing.collectAsState()
   val isRandomizing by viewModel.isRandomizing.collectAsState()
   val pullRefreshState = rememberPullToRefreshState()
