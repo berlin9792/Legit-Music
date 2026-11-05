@@ -227,7 +227,9 @@ widget/         Home-screen widget
   Its dismissal is stored in DataStore per app installation.
 - GMS builds use Firebase Remote Config's `maintenance_enabled` parameter as
   the maintenance source of truth; an FCM control-topic data message prompts an
-  immediate refresh. FOSS builds provide a no-op controller.
+  immediate refresh. Foreground FCM notification payloads are displayed by the
+  app service, which also logs topic subscription and fetch failures. FOSS
+  builds provide a no-op controller.
 - Keep Home feed pagination triggers non-blocking: load its DataStore filters
   inside the IO coroutine and claim the in-flight guard before launching it.
 - Avoid collecting HomeViewModel flows in HomeScreen unless the UI consumes
