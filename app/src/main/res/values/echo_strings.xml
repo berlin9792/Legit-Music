@@ -4,7 +4,7 @@
     <string name="remote_maintenance_message">Please try again later.</string>
     <string name="remote_maintenance_checking">Checking service status...</string>
     <string name="remote_maintenance_notification_channel">Service updates</string>
-    <string name="remote_maintenance_notification_text">The app's service status has changed.</string>
+    <string name="remote_maintenance_notification_text">The service status has changed.</string>
 
     <string name="explore">Explore</string>
     <string name="tab_explore">Explore</string>
