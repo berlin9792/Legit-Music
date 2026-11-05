@@ -12,6 +12,8 @@ import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
 import echo.music.iad1tya.echomusic.AudioDeviceBottomSheet
+import echo.music.iad1tya.maintenance.RemoteMaintenance
+import echo.music.iad1tya.maintenance.RemoteMaintenanceScreen
 import android.view.HapticFeedbackConstants
 import android.view.View
 import android.view.WindowManager
@@ -322,6 +324,7 @@ class MainActivity : ComponentActivity() {
 
   override fun onStart() {
     super.onStart()
+    RemoteMaintenance.onAppVisible()
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       if (
@@ -500,12 +503,24 @@ class MainActivity : ComponentActivity() {
     }
 
     setContent {
-      echomusicApp(
-        playerConnection = playerConnection,
-        database = database,
-        downloadUtil = downloadUtil,
-        syncUtils = syncUtils,
-      )
+      val maintenanceState by RemoteMaintenance.state.collectAsState()
+
+      LaunchedEffect(maintenanceState.enabled, playerConnection) {
+        if (maintenanceState.enabled) {
+          runCatching { playerConnection?.player?.stop() }
+        }
+      }
+
+      if (maintenanceState.enabled || maintenanceState.isChecking) {
+        RemoteMaintenanceScreen(maintenanceState)
+      } else {
+        echomusicApp(
+          playerConnection = playerConnection,
+          database = database,
+          downloadUtil = downloadUtil,
+          syncUtils = syncUtils,
+        )
+      }
     }
   }
 

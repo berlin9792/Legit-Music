@@ -248,6 +248,8 @@ dependencies {
   "gmsImplementation"(platform("com.google.firebase:firebase-bom:34.19.0"))
   "gmsImplementation"("com.google.firebase:firebase-analytics")
   "gmsImplementation"("com.google.firebase:firebase-crashlytics")
+  "gmsImplementation"("com.google.firebase:firebase-config")
+  "gmsImplementation"("com.google.firebase:firebase-messaging")
 
   // GMS Location Services for high-accuracy weather AI context
   "gmsImplementation"(libs.play.services.location)
