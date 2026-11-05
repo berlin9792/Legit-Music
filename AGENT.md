@@ -222,9 +222,9 @@ widget/         Home-screen widget
   design new screens to work across phone/tablet/foldable widths.
   A "floating tab bar" custom component exists at
   `ui/component/floatingtabbar/` — prefer reusing it over building new nav UI.
-- A one-time first-launch welcome dialog uses the bundled developer portrait,
-  "~Ayush" attribution, and developer website. Its dismissal is stored in
-  DataStore per app installation.
+- A one-time first-launch welcome dialog uses an account icon, "~Ayush"
+  attribution, and developer website. Its dismissal is stored in DataStore per
+  app installation.
 - Keep Home feed pagination triggers non-blocking: load its DataStore filters
   inside the IO coroutine and claim the in-flight guard before launching it.
 - Icons: partly Material Symbols/Icons Extended
