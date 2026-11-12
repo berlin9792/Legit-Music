@@ -618,6 +618,56 @@ fun HomeScreen(
 
   var randomSeed by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
 
+  val aiRecommendationSongs =
+    remember(aiRecommendedPlaylist) {
+      aiRecommendedPlaylist?.second?.distinctBy { it.id }.orEmpty()
+    }
+  val uniqueCommunityPlaylists =
+    remember(communityPlaylists) {
+      communityPlaylists?.distinctBy { it.playlist.id }.orEmpty()
+    }
+  val uniqueKeepListening =
+    remember(keepListening) { keepListening?.distinctBy { it.id }.orEmpty() }
+  val uniqueAccountPlaylists =
+    remember(accountPlaylists) { accountPlaylists?.distinctBy { it.id }.orEmpty() }
+  val uniqueForgottenFavorites =
+    remember(forgottenFavorites) { forgottenFavorites?.distinctBy { it.id }.orEmpty() }
+  val uniqueSimilarItems =
+    remember(similarRecommendations) {
+      similarRecommendations?.map { recommendation -> recommendation.items.distinctBy { it.id } }
+        .orEmpty()
+    }
+  val uniqueHomeSectionItems =
+    remember(homePage?.sections) {
+      homePage?.sections?.map { section -> section.items.distinctBy { it.id } }.orEmpty()
+    }
+  val homeSectionSongs =
+    remember(homePage?.sections) {
+      homePage?.sections
+        ?.map { section -> section.items.filterIsInstance<SongItem>().distinctBy { it.id } }
+        .orEmpty()
+    }
+  val homeSectionSongsOnly =
+    remember(homePage?.sections) {
+      homePage?.sections?.map { section ->
+        section.items.isNotEmpty() && section.items.all { it is SongItem }
+      }.orEmpty()
+    }
+  val uniqueMoodAndGenres =
+    remember(explorePage?.moodAndGenres) {
+      explorePage?.moodAndGenres?.distinctBy { it.title }.orEmpty()
+    }
+  val homeChips =
+    remember(homePage?.chips) {
+      homePage?.chips
+        ?.filter {
+          !it.title.equals("Podcasts", ignoreCase = true) &&
+            !it.title.equals("Uploaded", ignoreCase = true)
+        }
+        ?.map { it to it.title }
+        .orEmpty()
+    }
+
   LaunchedEffect(isRefreshing) {
     if (isRefreshing) {
       randomSeed = System.currentTimeMillis()
@@ -919,14 +969,7 @@ fun HomeScreen(
       ) {
         item {
           ChipsRow(
-            chips =
-              homePage
-                ?.chips
-                ?.filter {
-                  !it.title.equals("Podcasts", ignoreCase = true) &&
-                    !it.title.equals("Uploaded", ignoreCase = true)
-                }
-                ?.map { it to it.title } ?: emptyList(),
+            chips = homeChips,
             currentValue = selectedChip,
             onValueUpdate = { viewModel.toggleChip(it) }
           )
@@ -1159,7 +1202,7 @@ fun HomeScreen(
             }
             HomeSection.AiRecommendations -> {
               aiRecommendedPlaylist?.let { pair ->
-                val (playlist, songs) = pair
+                val playlist = pair.first
                 item(key = "ai_recommendation_title") {
                   val lastUpdatedStr =
                     playlist.playlist.lastUpdateTime?.let {
@@ -1179,7 +1222,7 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.animateItem()
                   ) {
-                    items(items = songs.distinctBy { it.id }, key = { it.id }) { songObj ->
+                    items(items = aiRecommendationSongs, key = { it.id }) { songObj ->
                       localGridItem(songObj)
                     }
                   }
@@ -1347,7 +1390,7 @@ fun HomeScreen(
                       horizontalArrangement = Arrangement.spacedBy(16.dp),
                       modifier = Modifier.animateItem()
                     ) {
-                      items(playlists.distinctBy { it.playlist.id }, key = { it.playlist.id }) {
+                      items(uniqueCommunityPlaylists, key = { it.playlist.id }) {
                         item ->
                         CommunityPlaylistCard(
                           item = item,
@@ -1454,7 +1497,7 @@ fun HomeScreen(
                           )
                           .animateItem()
                     ) {
-                      items(keepListening.distinctBy { it.id }, key = { it.id }) {
+                      items(uniqueKeepListening, key = { it.id }) {
                         localGridItem(it)
                       }
                     }
@@ -1509,7 +1552,7 @@ fun HomeScreen(
                       modifier = Modifier.animateItem()
                     ) {
                       items(
-                        items = accountPlaylists.distinctBy { it.id },
+                        items = uniqueAccountPlaylists,
                         key = { it.id },
                       ) { item ->
                         ytGridItem(item)
@@ -1531,7 +1574,7 @@ fun HomeScreen(
                         playerConnection.playQueue(
                           ListQueue(
                             title = forgottenFavoritesTitle,
-                            items = forgottenFavorites.distinctBy { it.id }.map { it.toMediaItem() }
+                            items = uniqueForgottenFavorites.map { it.toMediaItem() }
                           )
                         )
                       }
@@ -1552,7 +1595,7 @@ fun HomeScreen(
                       modifier = Modifier.fillMaxWidth().height(ListItemHeight * rows).animateItem()
                     ) {
                       itemsIndexed(
-                        items = forgottenFavorites.distinctBy { it.id },
+                        items = uniqueForgottenFavorites,
                         key = { _, it -> it.id }
                       ) { index, originalSong ->
                         val song by
@@ -1650,7 +1693,10 @@ fun HomeScreen(
                       WindowInsets.systemBars.only(WindowInsetsSides.Horizontal).asPaddingValues(),
                     modifier = Modifier.animateItem()
                   ) {
-                    items(recommendation.items.distinctBy { it.id }, key = { it.id }) { item ->
+                    items(
+                      uniqueSimilarItems.getOrNull(section.index).orEmpty(),
+                      key = { it.id }
+                    ) { item ->
                       ytGridItem(item)
                     }
                   }
@@ -1660,11 +1706,11 @@ fun HomeScreen(
             is HomeSection.HomePageSection -> {
               val sectionData = homePage?.sections?.getOrNull(section.index)
               sectionData?.let {
-                val sectionSongs = sectionData.items.filterIsInstance<SongItem>()
+                val sectionSongs = homeSectionSongs.getOrNull(section.index).orEmpty()
                 val hasPlayableSongs = sectionSongs.isNotEmpty()
 
                 val isSongsOnlySection =
-                  sectionData.items.isNotEmpty() && sectionData.items.all { it is SongItem }
+                  homeSectionSongsOnly.getOrNull(section.index) == true
 
                 item(key = "home_section_title_${section.index}") {
                   NavigationTitle(
@@ -1723,7 +1769,7 @@ fun HomeScreen(
                       modifier = Modifier.fillMaxWidth().height(ListItemHeight * 4).animateItem()
                     ) {
                       itemsIndexed(
-                        items = sectionSongs.distinctBy { it.id },
+                        items = homeSectionSongs.getOrNull(section.index).orEmpty(),
                         key = { _, it -> it.id }
                       ) { index, song ->
                         YouTubeListItem(
@@ -1787,7 +1833,10 @@ fun HomeScreen(
                           .asPaddingValues(),
                       modifier = Modifier.animateItem()
                     ) {
-                      items(sectionData.items.distinctBy { it.id }, key = { it.id }) { item ->
+                      items(
+                        uniqueHomeSectionItems.getOrNull(section.index).orEmpty(),
+                        key = { it.id }
+                      ) { item ->
                         ytGridItem(item)
                       }
                     }
@@ -1811,7 +1860,7 @@ fun HomeScreen(
                     modifier =
                       Modifier.height((MoodAndGenresButtonHeight + 12.dp) * 4 + 12.dp).animateItem()
                   ) {
-                    items(moodAndGenres.distinctBy { it.title }, key = { it.title }) {
+                    items(uniqueMoodAndGenres, key = { it.title }) {
                       MoodAndGenresButton(
                         title = it.title,
                         onClick = {
