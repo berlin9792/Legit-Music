@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import timber.log.Timber
 
-private const val MAINTENANCE_ENABLED_KEY = "maintenance_enabled"
+private const val MAINTENANCE_ENABLED_KEY = "legit_maintenance_enabled"
 private const val MAINTENANCE_MESSAGE_KEY = "maintenance_message"
 private const val MAINTENANCE_CONTROL_TOPIC = "legitmusic-maintenance-control"
 private const val MINIMUM_FETCH_INTERVAL_SECONDS = 60L

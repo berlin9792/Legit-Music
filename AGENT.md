@@ -226,7 +226,7 @@ widget/         Home-screen widget
 - A one-time first-launch welcome dialog uses the bundled developer portrait
   with an account-icon fallback, "~Ayush" attribution, and developer website.
   Its dismissal is stored in DataStore per app installation.
-- GMS builds use Firebase Remote Config's `maintenance_enabled` parameter as
+- GMS builds use Firebase Remote Config's `legit_maintenance_enabled` parameter as
   the maintenance source of truth; an FCM control-topic data message prompts an
   immediate refresh. Foreground FCM notification payloads are displayed by the
   app service, which also logs topic subscription and fetch failures. FOSS
