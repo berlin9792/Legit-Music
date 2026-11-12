@@ -497,7 +497,7 @@ object WrappedShareHelper {
       typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
     }
     canvas.drawText(
-      "CRAFTED WITH LEGITMUSIC • ${data.yearLabel} REPLAY • echomusic.app/wrapped",
+      "CRAFTED WITH LEGITMUSIC • ${data.yearLabel} REPLAY • zerotracelegit.netlify.app",
       width / 2f,
       1750f,
       footerPaint
@@ -529,7 +529,7 @@ object WrappedShareHelper {
         )
         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
       }
-      val chooser = Intent.createChooser(intent, "Share Echo Wrapped").apply {
+      val chooser = Intent.createChooser(intent, "Share Legit Wrapped").apply {
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
       }
       context.startActivity(chooser)

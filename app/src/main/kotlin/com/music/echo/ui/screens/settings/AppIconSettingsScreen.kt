@@ -138,7 +138,7 @@ fun AppIconSettingsScreen(
           AppIconType.DEFAULT,
           "New Icon",
           "The standard vibrant icon",
-          R.mipmap.ic_launcher
+          R.mipmap.cat_icon
         ),
         AppIconOption(AppIconType.POOKIE, "Pookie Icon", "A Cute Pink icon", R.mipmap.pookie_icon),
         AppIconOption(

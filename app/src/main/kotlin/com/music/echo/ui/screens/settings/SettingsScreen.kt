@@ -176,11 +176,16 @@ fun SettingsScreen(
         )
       }
 
-      if ("echo wrapped".contains(searchLower) || "wrapped".contains(searchLower) || "replay".contains(searchLower)) {
+      if (
+        "legit wrapped".contains(searchLower) ||
+          "echo wrapped".contains(searchLower) ||
+          "wrapped".contains(searchLower) ||
+          "replay".contains(searchLower)
+      ) {
         add(
           Material3SettingsItem(
             icon = painterResource(echo.music.iad1tya.R.drawable.ic_echo_wrapped),
-            title = { Text("Echo Wrapped") },
+            title = { Text("Legit Wrapped") },
             description = { Text("Your year in sound & personal music recap") },
             onClick = { navController.navigate("wrapped") }
           )

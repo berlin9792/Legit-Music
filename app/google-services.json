@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:833728827127:android:064281c6fcc66dafe6cdf2",
+        "mobilesdk_app_id": "1:833728827127:android:835fbaa700bd0f89e6cdf2",
         "android_client_info": {
-          "package_name": "echo.music.iad1tya"
+          "package_name": "echo.music.iad1tya.debug"
         }
       },
       "oauth_client": [],
@@ -26,9 +26,28 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:833728827127:android:835fbaa700bd0f89e6cdf2",
+        "mobilesdk_app_id": "1:833728827127:android:4004b92e35817287e6cdf2",
         "android_client_info": {
-          "package_name": "echo.music.iad1tya.debug"
+          "package_name": "legit.music.ayush"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDu3mTyhbSmy80OLxE0fhS3LwvUe5G60Qo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:833728827127:android:7ba859d19cba02dfe6cdf2",
+        "android_client_info": {
+          "package_name": "legit.music.ayush.debug"
         }
       },
       "oauth_client": [],
