@@ -404,7 +404,11 @@ fun SettingsScreen(
       )
     } else if (searchQuery.isNotEmpty()) {
       Spacer(modifier = Modifier.height(16.dp))
-      Material3SettingsGroup(scrollState = scrollState, items = finalItemsList)
+      Material3SettingsGroup(
+        scrollState = scrollState,
+        items = finalItemsList,
+        glassCards = true
+      )
     } else {
       Spacer(modifier = Modifier.height(16.dp))
 
@@ -416,23 +420,27 @@ fun SettingsScreen(
       val systemGroup = itemsList.drop(11) // Update, Links, About
 
       if (accountGroup.isNotEmpty()) {
-        Material3SettingsGroup(scrollState = scrollState, items = accountGroup)
+        Material3SettingsGroup(scrollState = scrollState, items = accountGroup, glassCards = true)
         Spacer(modifier = Modifier.height(16.dp))
       }
       if (listeningSummaryGroup.isNotEmpty()) {
-        Material3SettingsGroup(scrollState = scrollState, items = listeningSummaryGroup)
+        Material3SettingsGroup(
+          scrollState = scrollState,
+          items = listeningSummaryGroup,
+          glassCards = true
+        )
         Spacer(modifier = Modifier.height(16.dp))
       }
       if (playerGroup.isNotEmpty()) {
-        Material3SettingsGroup(scrollState = scrollState, items = playerGroup)
+        Material3SettingsGroup(scrollState = scrollState, items = playerGroup, glassCards = true)
         Spacer(modifier = Modifier.height(16.dp))
       }
       if (dataGroup.isNotEmpty()) {
-        Material3SettingsGroup(scrollState = scrollState, items = dataGroup)
+        Material3SettingsGroup(scrollState = scrollState, items = dataGroup, glassCards = true)
         Spacer(modifier = Modifier.height(16.dp))
       }
       if (systemGroup.isNotEmpty()) {
-        Material3SettingsGroup(scrollState = scrollState, items = systemGroup)
+        Material3SettingsGroup(scrollState = scrollState, items = systemGroup, glassCards = true)
       }
     }
 

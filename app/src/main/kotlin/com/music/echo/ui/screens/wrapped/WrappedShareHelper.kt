@@ -497,7 +497,7 @@ object WrappedShareHelper {
       typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
     }
     canvas.drawText(
-      "CRAFTED WITH LEGITMUSIC • ${data.yearLabel} REPLAY • zerotracelegit.netlify.app",
+      "MODDED OR CRAFTED BY LEGIT • ${data.yearLabel} REPLAY",
       width / 2f,
       1750f,
       footerPaint

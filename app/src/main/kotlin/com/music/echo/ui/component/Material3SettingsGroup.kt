@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
@@ -38,8 +39,12 @@ fun Material3SettingsGroup(
   title: String? = null,
   compact: Boolean = false,
   scrollState: ScrollState? = null,
-  items: List<Material3SettingsItem>
+  items: List<Material3SettingsItem>,
+  glassCards: Boolean = false
 ) {
+  val glassConfig = LocalGlassEffectConfig.current
+  val useGlass = glassCards && glassConfig.globalEnabled && isGlassSupported()
+
   Column(modifier = Modifier.fillMaxWidth()) {
     title?.let {
       Text(
@@ -58,36 +63,53 @@ fun Material3SettingsGroup(
       )
     }
 
-    Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+    Column(
+      modifier = Modifier.fillMaxWidth(),
+      verticalArrangement = Arrangement.spacedBy(if (glassCards) 10.dp else 2.dp)
+    ) {
       items.forEachIndexed { index, item ->
         val shape =
-          when {
-            items.size == 1 -> RoundedCornerShape(24.dp)
-            index == 0 ->
-              RoundedCornerShape(
-                topStart = 24.dp,
-                topEnd = 24.dp,
-                bottomStart = 4.dp,
-                bottomEnd = 4.dp
-              )
-            index == items.size - 1 ->
-              RoundedCornerShape(
-                topStart = 4.dp,
-                topEnd = 4.dp,
-                bottomStart = 24.dp,
-                bottomEnd = 24.dp
-              )
-            else -> RoundedCornerShape(4.dp)
+          if (glassCards) {
+            RoundedCornerShape(22.dp)
+          } else {
+            when {
+              items.size == 1 -> RoundedCornerShape(24.dp)
+              index == 0 ->
+                RoundedCornerShape(
+                  topStart = 24.dp,
+                  topEnd = 24.dp,
+                  bottomStart = 4.dp,
+                  bottomEnd = 4.dp
+                )
+              index == items.size - 1 ->
+                RoundedCornerShape(
+                  topStart = 4.dp,
+                  topEnd = 4.dp,
+                  bottomStart = 24.dp,
+                  bottomEnd = 24.dp
+                )
+              else -> RoundedCornerShape(4.dp)
+            }
           }
 
         Card(
-          modifier = Modifier.fillMaxWidth().animateContentSize(),
+          modifier =
+            Modifier.fillMaxWidth()
+              .animateContentSize()
+              .then(
+                if (useGlass) Modifier.liquidGlass(config = glassConfig, shape = shape)
+                else Modifier
+              ),
           shape = shape,
           colors =
             CardDefaults.cardColors(
-              containerColor =
-                if (item.isHighlighted) MaterialTheme.colorScheme.surfaceVariant
-                else MaterialTheme.colorScheme.surfaceContainerHigh
+              containerColor = when {
+                useGlass && item.isHighlighted ->
+                  MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
+                useGlass -> Color.Transparent
+                item.isHighlighted -> MaterialTheme.colorScheme.surfaceVariant
+                else -> MaterialTheme.colorScheme.surfaceContainerHigh
+              }
             ),
           elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {

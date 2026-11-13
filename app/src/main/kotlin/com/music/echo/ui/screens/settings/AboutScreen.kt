@@ -23,11 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,8 +46,6 @@ fun AboutScreen(
   onBack: (() -> Unit)? = null,
   highlightKey: String? = null
 ) {
-  val uriHandler = LocalUriHandler.current
-
   Scaffold(
     modifier = Modifier.fillMaxSize(),
     containerColor = MaterialTheme.colorScheme.surface,
@@ -112,10 +106,8 @@ fun AboutScreen(
           items =
             listOf(
               Material3SettingsItem(
-                icon = painterResource(R.drawable.website),
-                title = { Text("Website") },
-                description = { Text("zerotracelegit.netlify.app") },
-                onClick = { uriHandler.openUri("https://zerotracelegit.netlify.app") },
+                icon = painterResource(R.drawable.person),
+                title = { Text("Modded or crafted by Legit") },
               ),
             ),
         )
@@ -131,8 +123,6 @@ private fun AboutAppCard() {
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.spacedBy(8.dp),
   ) {
-    val isDark = MaterialTheme.colorScheme.surface.luminance() < 0.5f
-
     var isEasterEggActive by remember { mutableStateOf(false) }
     val rotation by
       animateFloatAsState(
@@ -174,9 +164,8 @@ private fun AboutAppCard() {
     ) {
       if (rotation <= 90f) {
         Image(
-          painter = painterResource(R.drawable.ic_launcher_nobg),
+          painter = painterResource(R.drawable.dev),
           contentDescription = null,
-          colorFilter = ColorFilter.tint(if (isDark) Color.White else Color(0xFFEA3829)),
           modifier = Modifier.fillMaxSize()
         )
       } else {
@@ -214,15 +203,15 @@ private fun AboutAppCard() {
           modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
         )
       }
-      if (BuildConfig.DEBUG) {
+      if (!BuildConfig.DEBUG) {
         Surface(
           shape = RoundedCornerShape(8.dp),
-          color = MaterialTheme.colorScheme.error.copy(alpha = 0.10f),
+          color = MaterialTheme.colorScheme.primary.copy(alpha = 0.10f),
         ) {
           Text(
-            text = "DEBUG",
+            text = "RELEASE",
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.error,
+            color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
           )

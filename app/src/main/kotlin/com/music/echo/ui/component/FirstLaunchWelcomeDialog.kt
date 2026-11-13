@@ -17,13 +17,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,12 +29,8 @@ import androidx.compose.ui.window.Dialog
 import coil3.compose.AsyncImage
 import echo.music.iad1tya.R
 
-private const val DEVELOPER_WEBSITE = "https://zerotracelegit.netlify.app"
-
 @Composable
 fun FirstLaunchWelcomeDialog(onDismiss: () -> Unit) {
-  val uriHandler = LocalUriHandler.current
-
   Dialog(onDismissRequest = onDismiss) {
     Surface(
       modifier = Modifier.fillMaxWidth(),
@@ -80,11 +74,7 @@ fun FirstLaunchWelcomeDialog(onDismiss: () -> Unit) {
           style = MaterialTheme.typography.titleLarge,
           fontWeight = FontWeight.SemiBold,
         )
-        Spacer(Modifier.height(8.dp))
-        TextButton(onClick = { uriHandler.openUri(DEVELOPER_WEBSITE) }) {
-          Text(stringResource(R.string.welcome_website))
-        }
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(20.dp))
         Button(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
           Text(stringResource(R.string.welcome_get_started))
         }
