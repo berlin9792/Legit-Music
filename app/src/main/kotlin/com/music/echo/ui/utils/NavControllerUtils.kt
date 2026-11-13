@@ -12,3 +12,13 @@ fun NavController.backToMain() {
     popBackStack()
   }
 }
+
+fun NavController.returnToMainAfterLogin() {
+  backToMain()
+  if (currentBackStackEntry?.destination?.route !in Screens.MainScreens.map { it.route }) {
+    navigate(Screens.Home.route) {
+      popUpTo("login") { inclusive = true }
+      launchSingleTop = true
+    }
+  }
+}

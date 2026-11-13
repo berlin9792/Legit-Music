@@ -1,7 +1,6 @@
 package echo.music.iad1tya.ui.screens
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
@@ -20,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
@@ -37,10 +35,9 @@ import echo.music.iad1tya.constants.SavedAccountsKey
 import echo.music.iad1tya.constants.VisitorDataKey
 import echo.music.iad1tya.models.AccountData
 import echo.music.iad1tya.ui.component.IconButton
-import echo.music.iad1tya.ui.utils.backToMain
+import echo.music.iad1tya.ui.utils.returnToMainAfterLogin
 import echo.music.iad1tya.utils.rememberPreference
 import echo.music.iad1tya.utils.reportException
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
@@ -49,12 +46,11 @@ import kotlinx.serialization.json.Json
 import timber.log.Timber
 
 @SuppressLint("SetJavaScriptEnabled")
-@OptIn(ExperimentalMaterial3Api::class, DelicateCoroutinesApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
   navController: NavController,
 ) {
-  val context = LocalContext.current
   val coroutineScope = rememberCoroutineScope()
   var visitorData by rememberPreference(VisitorDataKey, "")
   var dataSyncId by rememberPreference(DataSyncIdKey, "")
@@ -117,7 +113,7 @@ fun LoginScreen(
                       accounts.add(newAccount)
                       savedAccountsJson = Json.encodeToString(accounts)
 
-                      Timber.d("Login: Successfully logged in as ${it.name}, restarting app...")
+                      Timber.d("Login: Successfully logged in as ${it.name}")
 
                       webView?.apply {
                         stopLoading()
@@ -125,15 +121,7 @@ fun LoginScreen(
                         clearCache(true)
                         clearFormData()
                       }
-
-                      val intent =
-                        context.packageManager.getLaunchIntentForPackage(context.packageName)
-                      intent?.addFlags(
-                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                      )
-                      context.startActivity(intent)
-                      delay(500)
-                      Runtime.getRuntime().exit(0)
+                      navController.returnToMainAfterLogin()
                     }
                     .onFailure {
                       Timber.e(it, "Login: Authentication validation failed")
@@ -180,7 +168,10 @@ fun LoginScreen(
   TopAppBar(
     title = { Text(stringResource(R.string.login)) },
     navigationIcon = {
-      IconButton(onClick = navController::navigateUp, onLongClick = navController::backToMain) {
+      IconButton(
+        onClick = navController::navigateUp,
+        onLongClick = navController::returnToMainAfterLogin
+      ) {
         Icon(painterResource(R.drawable.arrow_back), contentDescription = null)
       }
     }

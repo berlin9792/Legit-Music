@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -133,6 +134,7 @@ fun LibraryArtistsScreen(
   }
 
   val artists by viewModel.allArtists.collectAsState()
+  val uniqueArtists = remember(artists) { artists.distinctBy { it.id } }
 
   val lazyListState = rememberLazyListState()
   val lazyGridState = rememberLazyGridState()
@@ -248,7 +250,7 @@ fun LibraryArtistsScreen(
             }
 
             items(
-              items = artists.distinctBy { it.id },
+              items = uniqueArtists,
               key = { it.id },
               contentType = { CONTENT_TYPE_ARTIST },
             ) { artist ->
@@ -300,7 +302,7 @@ fun LibraryArtistsScreen(
             }
 
             items(
-              items = artists.distinctBy { it.id },
+              items = uniqueArtists,
               key = { it.id },
               contentType = { CONTENT_TYPE_ARTIST },
             ) { artist ->

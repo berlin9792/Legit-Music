@@ -40,6 +40,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -87,7 +88,6 @@ import echo.music.iad1tya.constants.YtmSyncKey
 import echo.music.iad1tya.db.entities.Album
 import echo.music.iad1tya.db.entities.Artist
 import echo.music.iad1tya.db.entities.Playlist
-import echo.music.iad1tya.db.entities.PlaylistEntity
 import echo.music.iad1tya.extensions.reversed
 import echo.music.iad1tya.spotify.SpotifyMapper
 import echo.music.iad1tya.ui.component.AlbumGridItem
@@ -113,7 +113,6 @@ import coil3.compose.AsyncImage
 import java.text.Collator
 import java.time.LocalDateTime
 import java.util.Locale
-import java.util.UUID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -158,55 +157,6 @@ fun LibraryMixScreen(
   val (ytmSync) = rememberPreference(YtmSyncKey, true)
 
   val topSize by viewModel.topValue.collectAsState(initial = 50)
-  val likedPlaylist =
-    Playlist(
-      playlist =
-        PlaylistEntity(id = UUID.randomUUID().toString(), name = stringResource(R.string.liked)),
-      songCount = 0,
-      songThumbnails = emptyList(),
-    )
-
-  val downloadPlaylist =
-    Playlist(
-      playlist =
-        PlaylistEntity(id = UUID.randomUUID().toString(), name = stringResource(R.string.offline)),
-      songCount = 0,
-      songThumbnails = emptyList(),
-    )
-
-  val topPlaylist =
-    Playlist(
-      playlist =
-        PlaylistEntity(
-          id = UUID.randomUUID().toString(),
-          name = stringResource(R.string.my_top) + " $topSize"
-        ),
-      songCount = 0,
-      songThumbnails = emptyList(),
-    )
-
-  val cachePlaylist =
-    Playlist(
-      playlist =
-        PlaylistEntity(
-          id = UUID.randomUUID().toString(),
-          name = stringResource(R.string.cached_playlist)
-        ),
-      songCount = 0,
-      songThumbnails = emptyList(),
-    )
-
-  val uploadedPlaylist =
-    Playlist(
-      playlist =
-        PlaylistEntity(
-          id = UUID.randomUUID().toString(),
-          name = stringResource(R.string.uploaded_playlist)
-        ),
-      songCount = 0,
-      songThumbnails = emptyList(),
-    )
-
   val (showLiked) = rememberPreference(ShowLikedPlaylistKey, true)
   val (showDownloaded) = rememberPreference(ShowDownloadedPlaylistKey, true)
   val (showExported) = rememberPreference(ShowExportedPlaylistKey, true)
@@ -218,8 +168,11 @@ fun LibraryMixScreen(
   val artist = viewModel.artists.collectAsState()
   val playlist = viewModel.playlists.collectAsState()
 
-  val collator = Collator.getInstance(Locale.getDefault())
-  collator.strength = Collator.PRIMARY
+  val locale = Locale.getDefault()
+  val collator =
+    remember(locale) {
+      Collator.getInstance(locale).apply { strength = Collator.PRIMARY }
+    }
 
   fun <T> List<T>.sortItems(): List<T> {
     return when (sortType) {
@@ -255,11 +208,20 @@ fun LibraryMixScreen(
     }.reversed(sortDescending)
   }
 
-  val sortedPlaylists = playlist.value.sortItems()
-  val pinnedPlaylists = sortedPlaylists.filter { it.playlist.isPinned }
-  val otherPlaylists = sortedPlaylists.filterNot { it.playlist.isPinned }
-  val sortedArtists = artist.value.sortItems()
-  val sortedAlbums = albums.value.sortItems()
+  val sortedPlaylists =
+    remember(playlist.value, sortType, sortDescending, locale) { playlist.value.sortItems() }
+  val pinnedPlaylists = remember(sortedPlaylists) { sortedPlaylists.filter { it.playlist.isPinned } }
+  val otherPlaylists = remember(sortedPlaylists) { sortedPlaylists.filterNot { it.playlist.isPinned } }
+  val uniquePlaylists =
+    remember(pinnedPlaylists, otherPlaylists) {
+      (pinnedPlaylists + otherPlaylists).distinctBy { it.id }
+    }
+  val sortedArtists =
+    remember(artist.value, sortType, sortDescending, locale) { artist.value.sortItems() }
+  val uniqueArtists = remember(sortedArtists) { sortedArtists.distinctBy { it.id } }
+  val sortedAlbums =
+    remember(albums.value, sortType, sortDescending, locale) { albums.value.sortItems() }
+  val uniqueAlbums = remember(sortedAlbums) { sortedAlbums.distinctBy { it.id } }
 
   val coroutineScope = rememberCoroutineScope()
 
@@ -441,9 +403,8 @@ fun LibraryMixScreen(
             )
           }
 
-          val allPlaylists = pinnedPlaylists + otherPlaylists
           items(
-            items = allPlaylists.distinctBy { it.id },
+            items = uniquePlaylists,
             key = { "playlist_${it.id}" },
             contentType = { CONTENT_TYPE_PLAYLIST },
           ) { item ->
@@ -600,7 +561,8 @@ fun LibraryMixScreen(
 
             itemsIndexed(
               items = spotifyUiState.playlists,
-              key = { _, pl -> "spotify_${pl.id}" }
+              key = { _, pl -> "spotify_${pl.id}" },
+              contentType = { _, _ -> CONTENT_TYPE_PLAYLIST },
             ) { index, spPlaylist ->
               val coverUrl = SpotifyMapper.getPlaylistThumbnail(spPlaylist)
               val owner = spPlaylist.owner?.displayName?.takeIf { it.isNotBlank() }
@@ -657,7 +619,7 @@ fun LibraryMixScreen(
             }
 
             items(
-              items = sortedArtists.distinctBy { it.id },
+              items = uniqueArtists,
               key = { "artist_${it.id}" },
               contentType = { "artist" },
             ) { item ->
@@ -715,7 +677,7 @@ fun LibraryMixScreen(
             }
 
             items(
-              items = sortedAlbums.distinctBy { it.id },
+              items = uniqueAlbums,
               key = { "album_${it.id}" },
               contentType = { "album" },
             ) { item ->
@@ -884,9 +846,8 @@ fun LibraryMixScreen(
             )
           }
 
-          val allPlaylists = pinnedPlaylists + otherPlaylists
           items(
-            items = allPlaylists.distinctBy { it.id },
+            items = uniquePlaylists,
             key = { "playlist_${it.id}" },
             contentType = { CONTENT_TYPE_PLAYLIST },
           ) { item ->
@@ -962,7 +923,10 @@ fun LibraryMixScreen(
             }
           } else {
             // Liked songs grid item
-            item(key = "spotify_liked_songs") {
+            item(
+              key = "spotify_liked_songs",
+              contentType = CONTENT_TYPE_PLAYLIST,
+            ) {
               val songCount = spotifyUiState.likedSongsCount ?: 0
               GridItem(
                 title = {
@@ -1035,7 +999,8 @@ fun LibraryMixScreen(
             // Spotify playlists grid items
             items(
               items = spotifyUiState.playlists,
-              key = { "spotify_${it.id}" }
+              key = { "spotify_${it.id}" },
+              contentType = { CONTENT_TYPE_PLAYLIST },
             ) { spPlaylist ->
               val coverUrl = SpotifyMapper.getPlaylistThumbnail(spPlaylist)
               val countText = spPlaylist.tracks?.total?.let { "$it songs" } ?: ""
@@ -1097,7 +1062,7 @@ fun LibraryMixScreen(
             }
 
             items(
-              items = sortedArtists.distinctBy { it.id },
+              items = uniqueArtists,
               key = { "artist_${it.id}" },
               contentType = { "artist" },
             ) { item ->
@@ -1139,7 +1104,7 @@ fun LibraryMixScreen(
             }
 
             items(
-              items = sortedAlbums.distinctBy { it.id },
+              items = uniqueAlbums,
               key = { "album_${it.id}" },
               contentType = { "album" },
             ) { item ->

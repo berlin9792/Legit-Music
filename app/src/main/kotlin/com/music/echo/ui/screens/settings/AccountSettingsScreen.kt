@@ -227,14 +227,15 @@ fun AccountSettingsScreen(
                 },
                 onClick = {
                   if (account.cookie != innerTubeCookie) {
-                    accountSettingsViewModel.saveTokenAndRestart(
+                    accountSettingsViewModel.saveAccountSession(
                       context = context,
                       cookie = account.cookie,
                       visitorData = account.visitorData,
                       dataSyncId = account.dataSyncId,
                       accountName = account.name,
                       accountEmail = account.email,
-                      accountChannelHandle = account.channelHandle
+                      accountChannelHandle = account.channelHandle,
+                      onSaved = navController::backToMain,
                     )
                   }
                 }
@@ -533,7 +534,7 @@ fun AccountSettingsScreen(
                 accountChannelHandleValue = it.substringAfter("=")
             }
           }
-          accountSettingsViewModel.saveTokenAndRestart(
+          accountSettingsViewModel.saveAccountSession(
             context = context,
             cookie = cookie,
             visitorData = visitorDataValue,
@@ -541,6 +542,7 @@ fun AccountSettingsScreen(
             accountName = accountNameValue,
             accountEmail = accountEmailValue,
             accountChannelHandle = accountChannelHandleValue,
+            onSaved = navController::backToMain,
           )
         },
         onDismiss = { showTokenEditor = false },

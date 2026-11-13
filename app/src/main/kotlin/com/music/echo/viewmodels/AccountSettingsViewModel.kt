@@ -1,10 +1,10 @@
 package echo.music.iad1tya.viewmodels
 
 import android.content.Context
-import android.content.Intent
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.music.innertube.YouTube
 import dagger.hilt.android.lifecycle.HiltViewModel
 import echo.music.iad1tya.App
 import echo.music.iad1tya.constants.AccountChannelHandleKey
@@ -13,6 +13,7 @@ import echo.music.iad1tya.constants.AccountNameKey
 import echo.music.iad1tya.constants.DataSyncIdKey
 import echo.music.iad1tya.constants.InnerTubeCookieKey
 import echo.music.iad1tya.constants.VisitorDataKey
+import echo.music.iad1tya.utils.InnerTubeXResolver
 import echo.music.iad1tya.utils.SyncUtils
 import echo.music.iad1tya.utils.dataStore
 import javax.inject.Inject
@@ -44,7 +45,7 @@ constructor(
     }
   }
 
-  fun saveTokenAndRestart(
+  fun saveAccountSession(
     context: Context,
     cookie: String,
     visitorData: String,
@@ -52,6 +53,7 @@ constructor(
     accountName: String,
     accountEmail: String,
     accountChannelHandle: String,
+    onSaved: () -> Unit,
   ) {
     viewModelScope.launch(Dispatchers.IO) {
       context.dataStore.edit { settings ->
@@ -62,12 +64,11 @@ constructor(
         settings[AccountEmailKey] = accountEmail
         settings[AccountChannelHandleKey] = accountChannelHandle
       }
-      withContext(Dispatchers.Main) {
-        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
-        intent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        context.startActivity(intent)
-        Runtime.getRuntime().exit(0)
-      }
+      YouTube.cookie = cookie
+      YouTube.visitorData = visitorData
+      YouTube.dataSyncId = dataSyncId
+      InnerTubeXResolver.onSessionChanged()
+      withContext(Dispatchers.Main) { onSaved() }
     }
   }
 }
