@@ -322,9 +322,8 @@ fun SettingsScreen(
                   val intent =
                     Intent(
                       Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS,
-                      Uri.parse("package:${context.packageName}")
+                      Uri.fromParts("package", context.packageName, null)
                     )
-                  intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                   context.startActivity(intent)
                 } catch (e: Exception) {
                   when (e) {
@@ -406,8 +405,7 @@ fun SettingsScreen(
       Spacer(modifier = Modifier.height(16.dp))
       Material3SettingsGroup(
         scrollState = scrollState,
-        items = finalItemsList,
-        glassCards = true
+        items = finalItemsList
       )
     } else {
       Spacer(modifier = Modifier.height(16.dp))
@@ -420,27 +418,26 @@ fun SettingsScreen(
       val systemGroup = itemsList.drop(11) // Update, Links, About
 
       if (accountGroup.isNotEmpty()) {
-        Material3SettingsGroup(scrollState = scrollState, items = accountGroup, glassCards = true)
+        Material3SettingsGroup(scrollState = scrollState, items = accountGroup)
         Spacer(modifier = Modifier.height(16.dp))
       }
       if (listeningSummaryGroup.isNotEmpty()) {
         Material3SettingsGroup(
           scrollState = scrollState,
-          items = listeningSummaryGroup,
-          glassCards = true
+          items = listeningSummaryGroup
         )
         Spacer(modifier = Modifier.height(16.dp))
       }
       if (playerGroup.isNotEmpty()) {
-        Material3SettingsGroup(scrollState = scrollState, items = playerGroup, glassCards = true)
+        Material3SettingsGroup(scrollState = scrollState, items = playerGroup)
         Spacer(modifier = Modifier.height(16.dp))
       }
       if (dataGroup.isNotEmpty()) {
-        Material3SettingsGroup(scrollState = scrollState, items = dataGroup, glassCards = true)
+        Material3SettingsGroup(scrollState = scrollState, items = dataGroup)
         Spacer(modifier = Modifier.height(16.dp))
       }
       if (systemGroup.isNotEmpty()) {
-        Material3SettingsGroup(scrollState = scrollState, items = systemGroup, glassCards = true)
+        Material3SettingsGroup(scrollState = scrollState, items = systemGroup)
       }
     }
 
