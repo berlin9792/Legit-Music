@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-  namespace = "echo.music.usbaudio"
+  namespace = "legit.music.ayush.usbaudio"
   compileSdk = 37
   ndkVersion = "28.2.13676358"
 

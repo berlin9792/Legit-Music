@@ -7,7 +7,7 @@
         android:shortcutShortLabel="@string/search">
         <intent
             android:action="echo.music.iad1tya.action.SEARCH"
-            android:targetClass="echo.music.iad1tya.MainActivity"
+            android:targetClass="legit.music.ayush.MainActivity"
             android:targetPackage="legit.music.ayush" />
     </shortcut>
     <shortcut
@@ -17,7 +17,7 @@
         android:shortcutShortLabel="@string/filter_library">
         <intent
             android:action="echo.music.iad1tya.action.LIBRARY"
-            android:targetClass="echo.music.iad1tya.MainActivity"
+            android:targetClass="legit.music.ayush.MainActivity"
             android:targetPackage="legit.music.ayush" />
     </shortcut>
 </shortcuts>

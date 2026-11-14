@@ -1,7 +1,7 @@
 package com.music.innertube.models
 
-import com.music.echo.metadata.cleaner.MetadataCleaner
-import com.music.echo.metadata.models.CleanedMetadata
+import legit.music.ayush.metadata.cleaner.MetadataCleaner
+import legit.music.ayush.metadata.models.CleanedMetadata
 
 val SongItem.cleanedMetadata: CleanedMetadata
   get() = MetadataCleaner.clean(title, artists.firstOrNull()?.name.orEmpty())

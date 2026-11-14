@@ -42,6 +42,8 @@ include(
     ":domain"
 )
 
+project(":echomusiccanvas").projectDir = file("legitcanvas")
+
 
 // Use a local copy of BravePipe Extractor.
 // We assume, that echomusic and BravePipe Extractor have the same parent directory.

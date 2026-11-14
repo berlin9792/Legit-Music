@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-  namespace = "echo.music.dsp.audio"
+  namespace = "legit.music.ayush.dsp.audio"
   compileSdk = 37
   defaultConfig {
     minSdk = 26

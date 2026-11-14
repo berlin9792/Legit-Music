@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-  namespace = "com.music.echo.core"
+  namespace = "legit.music.ayush.core"
   compileSdk = 37
   defaultConfig { minSdk = 26 }
   compileOptions {

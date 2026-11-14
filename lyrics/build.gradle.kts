@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-  namespace = "com.music.echo.lyrics"
+  namespace = "legit.music.ayush.lyrics"
   compileSdk = 37
   defaultConfig { minSdk = 26 }
   compileOptions {

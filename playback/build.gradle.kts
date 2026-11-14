@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-  namespace = "com.music.echo.playback"
+  namespace = "legit.music.ayush.playback"
   compileSdk = 37
   defaultConfig { minSdk = 26 }
   compileOptions {
