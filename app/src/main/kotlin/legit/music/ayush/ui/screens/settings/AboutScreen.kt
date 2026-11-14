@@ -248,5 +248,6 @@ private fun AboutAppCard() {
         }
       }
     }
+    }
   }
 }
